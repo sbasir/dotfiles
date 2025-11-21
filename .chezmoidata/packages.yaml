@@ -4,6 +4,8 @@ packages:
     - 'git'
     - 'git-gui'
     - 'gh'
+    - 'neovim'
+    - 'fastfetch'
     casks:
     - 'font-commit-mono-nerd-font'
     - 'font-meslo-lg-nerd-font'
