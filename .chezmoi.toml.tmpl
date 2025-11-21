@@ -13,3 +13,6 @@ pager = "less -R"
 [hooks.edit-config-template.post]
     command = "chezmoi"
     args = ["init"]
+
+[diff]
+    exclude = ["scripts"]
