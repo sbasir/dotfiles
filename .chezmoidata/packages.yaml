@@ -6,6 +6,7 @@ packages:
     - 'gh'
     - 'neovim'
     - 'fastfetch'
+    - 'tmux'
     casks:
     - 'font-commit-mono-nerd-font'
     - 'font-meslo-lg-nerd-font'
