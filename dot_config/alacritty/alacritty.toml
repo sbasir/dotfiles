@@ -1,0 +1,7 @@
+[window]
+opacity = 0.9
+
+[font]
+normal = { family = "CommitMono Nerd Font Propo", style = "Regular" }
+size = 20
+
