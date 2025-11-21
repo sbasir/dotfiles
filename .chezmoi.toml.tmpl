@@ -1,0 +1,15 @@
+pager = "less -R"
+
+[add]
+    secrets = "error"
+
+[edit]
+    apply = true
+
+[git]
+    autoCommit = true
+    autoPush = true
+
+[hooks.edit-config-template.post]
+    command = "chezmoi"
+    args = ["init"]
