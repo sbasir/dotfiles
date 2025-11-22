@@ -7,6 +7,12 @@ packages:
     - 'neovim'
     - 'fastfetch'
     - 'tmux'
+    - 'curl'
+    - 'lazygit'
+    - 'tree-sitter-cli'
+    - 'fzf'
+    - 'ripgrep'
+    - 'fd'
     casks:
     - 'font-commit-mono-nerd-font'
     - 'font-meslo-lg-nerd-font'
