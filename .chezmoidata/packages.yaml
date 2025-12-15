@@ -13,6 +13,7 @@ packages:
     - 'fzf'
     - 'ripgrep'
     - 'fd'
+    - 'hugo'
     casks:
     - 'font-commit-mono-nerd-font'
     - 'font-meslo-lg-nerd-font'
