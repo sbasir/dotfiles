@@ -1,3 +1,6 @@
 [user]
 	name = Sofy Basir
 	email = sofy.basir@gmail.com
+
+[global]
+  init.defaultBranch = main
