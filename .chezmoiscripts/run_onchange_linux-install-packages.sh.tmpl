@@ -28,6 +28,10 @@ echo "=== Installing Node.js via n ==="
 curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
 sudo bash n {{ .packages.linux.node_install.version }}
 rm n
+# Fix permissions so npm can install global packages 
+sudo chown -R $(whoami) /usr/local/bin /usr/local/lib/node_modules 
+# Ensure PATH is correct 
+export PATH="/usr/local/bin:$PATH"
 
 # Verify installation
 echo "Node version: $(node -v)"
