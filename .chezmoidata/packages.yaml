@@ -35,8 +35,6 @@ packages:
       - tree-sitter-cli
       - wrangler
     deb_install_packages:
-      - url: "https://github.com/CodeSigils/neovim-debian-12-bookworm/raw/main/nvim-linux64.deb"
-        file: "nvim-linux64.deb"
       - url: "https://deb.nodesource.com/node_22.x/pool/main/n/nodejs/nodejs_22.11.0-1nodesource1_amd64.deb"
         file: "nodejs_22.11.0-1nodesource1_amd64.deb"
       - url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb"
