@@ -35,7 +35,7 @@ echo "npm version: $(npm -v)"
 
 echo "=== Installing npm packages ==="
 {{ range .packages.linux.node_install.packages -}}
-sudo npm install -g {{ . | quote }}
+npm install -g {{ . | quote }}
 {{ end }}
 
 echo "=== Installing .deb packages ==="
