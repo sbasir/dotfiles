@@ -22,20 +22,34 @@ fi
 
 sudo update-locale LANG="$DESIRED_LOCALE" LC_ALL="$DESIRED_LOCALE"
 
+echo "=== Installing Node.js via n ==="
+
+# Install n (Node binary manager)
+curl -L https://raw.githubusercontent.com/tj/n/master/bin/n -o n
+sudo bash n {{ .packages.linux.node_install.version }}
+rm n
+
+# Verify installation
+echo "Node version: $(node -v)"
+echo "npm version: $(npm -v)"
+
 echo "=== Installing npm packages ==="
-if command -v npm >/dev/null 2>&1; then
-  {{ range .packages.linux.npm_packages -}}
-  sudo npm install -g {{ . | quote }}
-  {{ end }}
-else
-  echo "npm not found — skipping npm package installation."
-fi
+{{ range .packages.linux.node_install.packages -}}
+sudo npm install -g {{ . | quote }}
+{{ end }}
 
 echo "=== Installing .deb packages ==="
 {{ range .packages.linux.deb_install_packages -}}
 curl -L -o {{ .file | quote }} {{ .url | quote }}
 sudo apt install -y ./{{ .file | quote }}
 rm -f {{ .file | quote }}
+{{ end }}
+
+echo "=== Installing AppImage packages ==="
+{{ range .packages.linux.appimage_install_packages }}
+curl -L -o {{ .file | quote }} {{ .url | quote }}
+chmod +x {{ .file | quote }}
+sudo mv {{ .file | quote }} {{ .target | quote }}
 {{ end }}
 
 echo "=== Installing tarball packages ==="
