@@ -34,26 +34,26 @@ echo "Node version: $(node -v)"
 echo "npm version: $(npm -v)"
 
 echo "=== Installing npm packages ==="
-{{ range .packages.linux.node_install.packages -}}
+{{ range default list .packages.linux.node_install.packages -}}
 npm install -g {{ . | quote }}
 {{ end }}
 
 echo "=== Installing .deb packages ==="
-{{ range .packages.linux.deb_install_packages -}}
+{{ range default list .packages.linux.deb_install_packages -}}
 curl -L -o {{ .file | quote }} {{ .url | quote }}
 sudo apt install -y ./{{ .file | quote }}
 rm -f {{ .file | quote }}
 {{ end }}
 
 echo "=== Installing AppImage packages ==="
-{{ range .packages.linux.appimage_install_packages }}
+{{ range default list .packages.linux.appimage_install_packages }}
 curl -L -o {{ .file | quote }} {{ .url | quote }}
 chmod +x {{ .file | quote }}
 sudo mv {{ .file | quote }} {{ .target | quote }}
 {{ end }}
 
 echo "=== Installing tarball packages ==="
-{{ range .packages.linux.tar_install_packages }}
+{{ range default list .packages.linux.tar_install_packages }}
 echo "Installing from tarball: {{ .url }}"
 
 # Download
