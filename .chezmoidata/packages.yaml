@@ -43,3 +43,4 @@ packages:
       - url: "https://github.com/neovim/neovim/releases/latest/download/nvim.appimage"
         file: "nvim.appimage"
         target: "/usr/local/bin/nvim"
+    tar_install_packages: []
