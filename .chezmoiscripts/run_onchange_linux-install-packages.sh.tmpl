@@ -38,5 +38,29 @@ sudo apt install -y ./{{ .file | quote }}
 rm -f {{ .file | quote }}
 {{ end }}
 
+echo "=== Installing tarball packages ==="
+{{ range .packages.linux.tar_install_packages }}
+echo "Installing from tarball: {{ .url }}"
+
+# Download
+curl -L -o {{ .file | quote }} {{ .url | quote }}
+
+# Prepare target directory
+sudo rm -rf {{ .target | quote }}
+sudo mkdir -p {{ .target | quote }}
+
+# Extract
+sudo tar xzf {{ .file | quote }} -C {{ .target | quote }}{{ if .extract_dir }} --strip-components=1{{ end }}
+
+# Optional symlink
+{{ if .symlink }}
+sudo ln -sf {{ .target | quote }}/bin/$(basename {{ .symlink | quote }}) {{ .symlink | quote }}
+{{ end }}
+
+# Cleanup
+rm -f {{ .file | quote }}
+
+{{ end }}
+
 {{ end -}}
 
