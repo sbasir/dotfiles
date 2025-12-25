@@ -37,3 +37,6 @@ packages:
     npm_packages:
       - tree-sitter-cli
       - wrangler
+    deb_install_packages:
+      - url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-amd64.deb"
+        file: "fastfetch-linux-amd64.deb"
