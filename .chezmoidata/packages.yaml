@@ -26,7 +26,6 @@ packages:
       - git
       - git-gui
       - neovim
-      - fastfetch
       - tmux
       - curl
       - fzf
