@@ -1,0 +1,27 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+
+set -e
+
+# --- APT packages ---
+echo "Installing APT packages..."
+sudo apt update -y
+
+{{ range .packages.linux.apt_packages -}}
+sudo apt install -y {{ . | quote }}
+{{ end }}
+
+# --- NPM packages ---
+if command -v npm >/dev/null 2>&1; then
+  echo "Installing npm packages..."
+
+  {{ range .packages.linux.npm_packages -}}
+  sudo npm install -g {{ . | quote }}
+  {{ end }}
+
+else
+  echo "npm not found — skipping npm package installation."
+fi
+
+{{ end -}}
+

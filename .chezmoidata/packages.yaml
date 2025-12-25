@@ -1,23 +1,40 @@
 packages:
   darwin:
     brews:
-    - 'git'
-    - 'git-gui'
-    - 'gh'
-    - 'neovim'
-    - 'fastfetch'
-    - 'tmux'
-    - 'curl'
-    - 'lazygit'
-    - 'tree-sitter-cli'
-    - 'fzf'
-    - 'ripgrep'
-    - 'fd'
-    - 'hugo'
-    - 'cloudflare-wrangler'
-    - 'devcontainer'
+      - "git"
+      - "git-gui"
+      - "gh"
+      - "neovim"
+      - "fastfetch"
+      - "tmux"
+      - "curl"
+      - "lazygit"
+      - "tree-sitter-cli"
+      - "fzf"
+      - "ripgrep"
+      - "fd"
+      - "hugo"
+      - "cloudflare-wrangler"
+      - "devcontainer"
     casks:
-    - 'font-commit-mono-nerd-font'
-    - 'font-meslo-lg-nerd-font'
-    - 'grandperspective'
-    - 'meld'
+      - "font-commit-mono-nerd-font"
+      - "font-meslo-lg-nerd-font"
+      - "grandperspective"
+      - "meld"
+  linux:
+    apt_packages:
+      - git
+      - git-gui
+      - neovim
+      - fastfetch
+      - tmux
+      - curl
+      - fzf
+      - ripgrep
+      - fd-find
+      - hugo
+      - nodejs
+      - npm
+    npm_packages:
+      - tree-sitter-cli
+      - wrangler
