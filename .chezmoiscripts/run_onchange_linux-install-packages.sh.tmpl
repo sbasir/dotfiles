@@ -68,11 +68,11 @@ sudo rm -rf {{ .target | quote }}
 sudo mkdir -p {{ .target | quote }}
 
 # Extract
-sudo tar xzf {{ .file | quote }} -C {{ .target | quote }}{{ if .extract_dir }} --strip-components=1{{ end }}
+sudo tar xzf {{ .file | quote }} -C {{ .target | quote }} --strip-components=1
 
 # Optional symlink
 {{ if .symlink }}
-sudo ln -sf {{ .target | quote }}/bin/$(basename {{ .symlink | quote }}) {{ .symlink | quote }}
+sudo ln -sf {{ .target | quote }}{{ .binary | quote}} {{ .symlink | quote }}
 {{ end }}
 
 # Cleanup
