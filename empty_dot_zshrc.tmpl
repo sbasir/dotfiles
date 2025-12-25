@@ -21,5 +21,7 @@ source $ZSH/oh-my-zsh.sh
 source <(chezmoi completion zsh)
 export EDITOR=nvim
 
+{{ if eq .chezmoi.os "darwin" }}
 ### RANCHER DESKTOP 
 export PATH="$PATH:/Users/sofy/.rd/bin"
+{{ end }}
