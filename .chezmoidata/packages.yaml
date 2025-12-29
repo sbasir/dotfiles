@@ -54,4 +54,4 @@ packages:
         file: "go.tar.gz"
         target: "/opt/go"
         binary: "/bin/go"
-        symlink: "/usr/local/bin/go"
+        symlink: "/usr/bin/go"
