@@ -16,6 +16,7 @@ packages:
       - "hugo"
       - "cloudflare-wrangler"
       - "devcontainer"
+      - "tree"
     casks:
       - "font-commit-mono-nerd-font"
       - "font-meslo-lg-nerd-font"
@@ -49,3 +50,8 @@ packages:
         target: "/opt/nvim"
         binary: "/bin/nvim"
         symlink: "/usr/local/bin/nvim"
+      - url: "https://go.dev/dl/go1.25.5.linux-arm64.tar.gz"
+        file: "go.tar.gz"
+        target: "/opt/go"
+        binary: "/bin/go"
+        symlink: "/usr/local/bin/go"
