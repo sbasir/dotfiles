@@ -31,6 +31,7 @@ packages:
       - fzf
       - ripgrep
       - fd-find
+      - python3
       - hugo
     node_install:
       version: "lts" # or "latest", or a specific version like "22.11.0"
