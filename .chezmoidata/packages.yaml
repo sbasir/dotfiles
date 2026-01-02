@@ -26,6 +26,7 @@ packages:
     apt_packages:
       - git
       - git-gui
+      - gh
       - tmux
       - curl
       - fzf
