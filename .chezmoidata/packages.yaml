@@ -33,6 +33,7 @@ packages:
       - ripgrep
       - fd-find
       - python3
+      - luarocks
       - hugo
     node_install:
       version: "lts" # or "latest", or a specific version like "22.11.0"
