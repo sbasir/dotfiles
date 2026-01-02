@@ -5,3 +5,5 @@ opacity = 0.9
 normal = { family = "MesloLGSDZ Nerd Font", style = "Regular" }
 size = 20
 
+[terminal]
+osc52 = "OnlyCopy"

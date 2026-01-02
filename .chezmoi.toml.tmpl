@@ -26,8 +26,9 @@ pager = "less -R"
     {{ end }}
 
 [diff]
+    exclude = ["scripts"]
     {{- if eq .chezmoi.os "linux" }}
     command = "nvim"
     args = ["-d"]
     {{ end -}}
-    exclude = ["scripts"]
+
