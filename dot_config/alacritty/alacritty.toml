@@ -13,6 +13,8 @@ osc52 = "OnlyCopy"
 # Retrieved 2026-01-04, License - CC BY-SA 4.0
 [keyboard]
 bindings = [
+  { key = "Left", mods = "Alt", chars = "\u001BB" },           # Alt + B (Move backward one word)
+  { key = "Right", mods = "Alt", chars = "\u001BF" },          # Alt + F (Move forward one word)
   { key = "B", mods = "Alt", chars = "\u001BB" },              # Alt + B (Move backward one word)
   { key = "F", mods = "Alt", chars = "\u001BF" },              # Alt + F (Move forward one word)
   { key = "D", mods = "Alt", chars = "\u001BD" },              # Alt + D (Delete the word after the cursor)
