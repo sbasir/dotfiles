@@ -4,6 +4,7 @@ packages:
       - "git"
       - "git-gui"
       - "gh"
+      - "n"
       - "neovim"
       - "fastfetch"
       - "tmux"

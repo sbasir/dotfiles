@@ -13,21 +13,74 @@ osc52 = "OnlyCopy"
 # Retrieved 2026-01-04, License - CC BY-SA 4.0
 [keyboard]
 bindings = [
-  { key = "Left", mods = "Alt", chars = "\u001BB" },           # Alt + B (Move backward one word)
-  { key = "Right", mods = "Alt", chars = "\u001BF" },          # Alt + F (Move forward one word)
-  { key = "B", mods = "Alt", chars = "\u001BB" },              # Alt + B (Move backward one word)
-  { key = "F", mods = "Alt", chars = "\u001BF" },              # Alt + F (Move forward one word)
-  { key = "D", mods = "Alt", chars = "\u001BD" },              # Alt + D (Delete the word after the cursor)
-  { key = "Backspace", mods = "Alt", chars = "\u001B\u007F" }, # Alt + Backspace (Delete word before cursor)
-  { key = "U", mods = "Alt", chars = "\u001BU" },              # Alt + U (Uppercase from cursor to end of word)
-  { key = "L", mods = "Alt", chars = "\u001BL" },              # Alt + L (Lowercase from cursor to end of word)
-  { key = "C", mods = "Alt", chars = "\u001BC" },              # Alt + C (Capitalize the current word)
-  { key = ".", mods = "Alt", chars = "\u001B." },              # Alt + . (Insert the last argument of previous command)
-  { key = "Y", mods = "Alt", chars = "\u001BY" },              # Alt + Y (Yank the top of the kill-ring)
-  { key = "/", mods = "Alt", chars = "\u001B/" },              # Alt + / (Attempt completion)
-  { key = "T", mods = "Alt", chars = "\u001BT" },              # Alt + T (Transpose the words around cursor)
-  { key = "R", mods = "Alt", chars = "\u001BR" },              # Alt + R (Recall the last command that matches input)
-  { key = "N", mods = "Alt", chars = "\u001BN" },              # Alt + N (Search forward through history)
-  { key = "P", mods = "Alt", chars = "\u001BP" },              # Alt + P (Search backward through history)
-  { key = "Q", mods = "Alt", chars = "\u001BQ" },              # Alt + Q (Not a standard bash shortcut, customizable)
+  { key = "Left", mods = "Alt", chars = "\u001BB" },  # Alt + B (Move backward one word)
+  { key = "Right", mods = "Alt", chars = "\u001BF" }, # Alt + F (Move forward one word)
+  { key = "B", mods = "Alt", chars = "\u001BB" },     # Alt + B (Move backward one word)
+  { key = "F", mods = "Alt", chars = "\u001BF" },     # Alt + F (Move forward one word)
+  { key = "D", mods = "Alt", chars = "\u001BD" },     # Alt + D (Delete the word after the cursor)
+  { key = "U", mods = "Alt", chars = "\u001BU" },     # Alt + U (Uppercase from cursor to end of word)
+  { key = "L", mods = "Alt", chars = "\u001BL" },     # Alt + L (Lowercase from cursor to end of word)
+  { key = "C", mods = "Alt", chars = "\u001BC" },     # Alt + C (Capitalize the current word)
+  { key = ".", mods = "Alt", chars = "\u001B." },     # Alt + . (Insert the last argument of previous command)
+  { key = "Y", mods = "Alt", chars = "\u001BY" },     # Alt + Y (Yank the top of the kill-ring)
+  { key = "/", mods = "Alt", chars = "\u001B/" },     # Alt + / (Attempt completion)
+  { key = "T", mods = "Alt", chars = "\u001BT" },     # Alt + T (Transpose the words around cursor)
+  { key = "R", mods = "Alt", chars = "\u001BR" },     # Alt + R (Recall the last command that matches input)
+  { key = "N", mods = "Alt", chars = "\u001BN" },     # Alt + N (Search forward through history)
+  { key = "P", mods = "Alt", chars = "\u001BP" },     # Alt + P (Search backward through history)
+  { key = "Q", mods = "Alt", chars = "\u001BQ" },     # Alt + Q (Not a standard bash shortcut, customizable)
+
+  # Alt + letters a–z
+  { key = "A", mods = "Alt", chars = "\u001ba" },
+  { key = "B", mods = "Alt", chars = "\u001bb" },
+  { key = "C", mods = "Alt", chars = "\u001bc" },
+  { key = "D", mods = "Alt", chars = "\u001bd" },
+  { key = "E", mods = "Alt", chars = "\u001be" },
+  { key = "F", mods = "Alt", chars = "\u001bf" },
+  { key = "G", mods = "Alt", chars = "\u001bg" },
+  { key = "H", mods = "Alt", chars = "\u001bh" },
+  { key = "I", mods = "Alt", chars = "\u001bi" },
+  { key = "J", mods = "Alt", chars = "\u001bj" },
+  { key = "K", mods = "Alt", chars = "\u001bk" },
+  { key = "L", mods = "Alt", chars = "\u001bl" },
+  { key = "M", mods = "Alt", chars = "\u001bm" },
+  { key = "N", mods = "Alt", chars = "\u001bn" },
+  { key = "O", mods = "Alt", chars = "\u001bo" },
+  { key = "P", mods = "Alt", chars = "\u001bp" },
+  { key = "Q", mods = "Alt", chars = "\u001bq" },
+  { key = "R", mods = "Alt", chars = "\u001br" },
+  { key = "S", mods = "Alt", chars = "\u001bs" },
+  { key = "T", mods = "Alt", chars = "\u001bt" },
+  { key = "U", mods = "Alt", chars = "\u001bu" },
+  { key = "V", mods = "Alt", chars = "\u001bv" },
+  { key = "W", mods = "Alt", chars = "\u001bw" },
+  { key = "X", mods = "Alt", chars = "\u001bx" },
+  { key = "Y", mods = "Alt", chars = "\u001by" },
+  { key = "Z", mods = "Alt", chars = "\u001bz" },
+
+  # Alt + digits 0–9
+  { key = "Key0", mods = "Alt", chars = "\u001b0" },
+  { key = "Key1", mods = "Alt", chars = "\u001b1" },
+  { key = "Key2", mods = "Alt", chars = "\u001b2" },
+  { key = "Key3", mods = "Alt", chars = "\u001b3" },
+  { key = "Key4", mods = "Alt", chars = "\u001b4" },
+  { key = "Key5", mods = "Alt", chars = "\u001b5" },
+  { key = "Key6", mods = "Alt", chars = "\u001b6" },
+  { key = "Key7", mods = "Alt", chars = "\u001b7" },
+  { key = "Key8", mods = "Alt", chars = "\u001b8" },
+  { key = "Key9", mods = "Alt", chars = "\u001b9" },
+
+  # Alt + common punctuation
+  { key = "Period", mods = "Alt", chars = "\u001b." },
+  { key = "Slash", mods = "Alt", chars = "\u001b/" },
+  { key = "Comma", mods = "Alt", chars = "\u001b," },
+  { key = "Semicolon", mods = "Alt", chars = "\u001b;" },
+  { key = "Minus", mods = "Alt", chars = "\u001b-" },
+  { key = "Backslash", mods = "Alt", chars = "\u001b\\" },
+  { key = "Space", mods = "Alt", chars = "\u001b " },
+
+  # Alt + navigation / editing
+  { key = "Left", mods = "Alt", chars = "\u001bb" },           # Alt + Left → back one word
+  { key = "Right", mods = "Alt", chars = "\u001bf" },          # Alt + Right → forward one word
+  { key = "Backspace", mods = "Alt", chars = "\u001b\u007f" }, # Alt + Backspace → delete word before cursor
 ]
