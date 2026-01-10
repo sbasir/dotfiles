@@ -22,8 +22,12 @@ source <(chezmoi completion zsh)
 export EDITOR=nvim
 
 {{ if eq .chezmoi.os "darwin" }}
-### RANCHER DESKTOP 
-export PATH="$PATH:/Users/sofy/.rd/bin"
-# Added by Antigravity
-export PATH="/Users/sofy/.antigravity/antigravity/bin:$PATH"
+export N_PREFIX="$HOME/.n"
+export PATH="$N_PREFIX/bin:$PATH"
+
+# Rancher Desktop
+export PATH="$PATH:$HOME/.rd/bin"
+
+# Google Antigravity
+export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
 {{ end }}
