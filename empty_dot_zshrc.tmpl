@@ -21,7 +21,7 @@ source $ZSH/oh-my-zsh.sh
 source <(chezmoi completion zsh)
 export EDITOR=nvim
 
-{{ if eq .chezmoi.os "darwin" }}
+{{- if eq .chezmoi.os "darwin" }}
 export N_PREFIX="$HOME/.n"
 export PATH="$N_PREFIX/bin:$PATH"
 
@@ -30,4 +30,12 @@ export PATH="$PATH:$HOME/.rd/bin"
 
 # Google Antigravity
 export PATH="$HOME/.antigravity/antigravity/bin:$PATH"
+
+# pnpm
+export PNPM_HOME="$HOME/Library/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# pnpm end
 {{ end }}
