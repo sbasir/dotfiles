@@ -44,7 +44,9 @@ npm install -g {{ . | quote }}
 
 echo "=== Installing unattended packages ==="
 {{ range .packages.linux.unattended_install -}}
-{{ .command }}
+{{ range .command -}}
+{{ . }}
+{{ end }}
 {{ end }}
 
 echo "=== Installing .deb packages ==="

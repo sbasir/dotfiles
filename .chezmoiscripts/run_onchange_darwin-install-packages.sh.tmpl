@@ -11,3 +11,9 @@ cask {{ . | quote }}
 EOF
 {{ end -}}
 
+echo "=== Installing unattended packages ==="
+{{ range .packages.darwin.unattended_install -}}
+{{ range .command -}}
+{{ . }}
+{{ end }}
+{{ end }}

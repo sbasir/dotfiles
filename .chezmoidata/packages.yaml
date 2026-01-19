@@ -22,6 +22,10 @@ packages:
       - "font-meslo-lg-nerd-font"
       - "grandperspective"
       - "meld"
+    unattended_install:
+      - command:
+          - curl https://sdk.cloud.google.com > install.sh
+          - bash install.sh --disable-prompts
   linux:
     apt_packages:
       - git
@@ -42,7 +46,11 @@ packages:
     deb_install_packages: []
     appimage_install_packages: []
     unattended_install:
-      - command: curl -LsSf https://astral.sh/uv/install.sh | sh
+      - command:
+          - curl -LsSf https://astral.sh/uv/install.sh | sh
+      - command:
+          - curl https://sdk.cloud.google.com > install.sh
+          - bash install.sh --disable-prompts
     tar_install_packages:
       - url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-aarch64.tar.gz"
         file: "fastfetch.tar.gz"
