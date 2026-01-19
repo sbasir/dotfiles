@@ -5,6 +5,7 @@ packages:
       - "git-gui"
       - "gh"
       - "n"
+      - "uv"
       - "neovim"
       - "fastfetch"
       - "tmux"
