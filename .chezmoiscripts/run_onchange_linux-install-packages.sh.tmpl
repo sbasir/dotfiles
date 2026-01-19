@@ -42,6 +42,11 @@ echo "=== Installing npm packages ==="
 npm install -g {{ . | quote }}
 {{ end }}
 
+echo "=== Installing unattended packages ==="
+{{ range .packages.linux.unattended_install_packages -}}
+{{ .command }}
+{{ end }}
+
 echo "=== Installing .deb packages ==="
 {{ range .packages.linux.deb_install_packages -}}
 curl -L -o {{ .file | quote }} {{ .url | quote }}
