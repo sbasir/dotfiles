@@ -43,7 +43,7 @@ npm install -g {{ . | quote }}
 {{ end }}
 
 echo "=== Installing unattended packages ==="
-{{ range .packages.linux.unattended_install_packages -}}
+{{ range .packages.linux.unattended_install -}}
 {{ .command }}
 {{ end }}
 
