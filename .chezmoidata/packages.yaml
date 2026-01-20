@@ -50,7 +50,7 @@ packages:
           - curl -LsSf https://astral.sh/uv/install.sh | sh
       - command:
           - curl -s https://sdk.cloud.google.com > install.sh
-          - if [ ! -d ~/google-cloud-sdk ]; then bash install.sh --disable-prompts; fi
+          - if [ ! -d ~/google-cloud-sdk ]; then bash install.sh --disable-prompts 2&>1 > /dev/null; fi
     tar_install_packages:
       - url: "https://github.com/fastfetch-cli/fastfetch/releases/latest/download/fastfetch-linux-aarch64.tar.gz"
         file: "fastfetch.tar.gz"

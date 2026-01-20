@@ -51,14 +51,14 @@ echo "=== Installing unattended packages ==="
 
 echo "=== Installing .deb packages ==="
 {{ range .packages.linux.deb_install_packages -}}
-curl -L -o {{ .file | quote }} {{ .url | quote }}
+curl -sL -o {{ .file | quote }} {{ .url | quote }}
 sudo apt install -y ./{{ .file | quote }}
 rm -f {{ .file | quote }}
 {{ end }}
 
 echo "=== Installing AppImage packages ==="
 {{ range .packages.linux.appimage_install_packages }}
-curl -L -o {{ .file | quote }} {{ .url | quote }}
+curl -sL -o {{ .file | quote }} {{ .url | quote }}
 chmod +x {{ .file | quote }}
 sudo mv {{ .file | quote }} {{ .target | quote }}
 {{ end }}
@@ -68,7 +68,7 @@ echo "=== Installing tarball packages ==="
 echo "Installing from tarball: {{ .url }}"
 
 # Download
-curl -L -o {{ .file | quote }} {{ .url | quote }}
+curl -sL -o {{ .file | quote }} {{ .url | quote }}
 
 # Prepare target directory
 sudo rm -rf {{ .target | quote }}
