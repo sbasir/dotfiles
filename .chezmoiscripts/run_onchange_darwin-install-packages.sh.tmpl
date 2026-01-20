@@ -9,7 +9,6 @@ brew {{ . | quote }}
 cask {{ . | quote }}
 {{ end -}}
 EOF
-{{ end -}}
 
 echo "=== Installing unattended packages ==="
 {{ range .packages.darwin.unattended_install -}}
@@ -17,3 +16,5 @@ echo "=== Installing unattended packages ==="
 {{ . }}
 {{ end }}
 {{ end }}
+{{ end -}}
+
