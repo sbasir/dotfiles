@@ -39,6 +39,9 @@ case ":$PATH:" in
 esac
 # pnpm end
 
+# aws auto-completion
+complete -C /opt/homebrew/bin/aws_completer aws
+
 {{ end }}
 
 eval "$(uv generate-shell-completion zsh)"
