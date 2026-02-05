@@ -17,11 +17,13 @@ packages:
       - "fd"
       - "devcontainer"
       - "tree"
+      - "wireguard-tools"
     casks:
       - "font-commit-mono-nerd-font"
       - "font-meslo-lg-nerd-font"
       - "grandperspective"
       - "meld"
+      - "swiftbar"
     unattended_install:
       - command:
           - curl -s https://sdk.cloud.google.com > install.sh
