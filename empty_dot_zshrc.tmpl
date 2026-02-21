@@ -42,6 +42,11 @@ esac
 # aws auto-completion
 complete -C /opt/homebrew/bin/aws_completer aws
 
+if command -v go &> /dev/null; then
+  export GOPATH="$HOME/go"
+  export PATH="$PATH:$GOPATH/bin"
+fi
+
 {{ end }}
 
 eval "$(uv generate-shell-completion zsh)"
