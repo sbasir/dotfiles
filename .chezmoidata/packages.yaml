@@ -18,6 +18,7 @@ packages:
       - "devcontainer"
       - "tree"
       - "wireguard-tools"
+      - "aws-vault"
     casks:
       - "font-commit-mono-nerd-font"
       - "font-meslo-lg-nerd-font"
