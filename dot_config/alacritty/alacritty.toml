@@ -83,4 +83,7 @@ bindings = [
   { key = "Left", mods = "Alt", chars = "\u001bb" },           # Alt + Left → back one word
   { key = "Right", mods = "Alt", chars = "\u001bf" },          # Alt + Right → forward one word
   { key = "Backspace", mods = "Alt", chars = "\u001b\u007f" }, # Alt + Backspace → delete word before cursor
+
+  # Shift + Return
+  { key = "Return", mods = "Shift", chars = "\u001b\r" },
 ]
