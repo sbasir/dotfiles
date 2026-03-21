@@ -11,11 +11,18 @@ fi
 home="{{ .chezmoi.homeDir }}"
 short_cwd="${cwd/#$home/~}"
 
+# --- ANSI color helpers (resolved at runtime, not as literal strings) ---
+RESET=$(printf '\033[0m')
+YELLOW=$(printf '\033[0;33m')
+RED=$(printf '\033[0;31m')
+GREEN=$(printf '\033[0;32m')
+BLUE=$(printf '\033[0;34m')
+
 # --- git branch (like p10k vcs) ---
 git_part=""
 branch=$(git -C "$cwd" symbolic-ref --short HEAD 2>/dev/null || git -C "$cwd" rev-parse --short HEAD 2>/dev/null)
 if [ -n "$branch" ]; then
-  git_part=" \033[0;33m $branch\033[0m"
+  git_part=" ${YELLOW} $branch${RESET}"
 fi
 
 # --- model ---
@@ -27,13 +34,13 @@ ctx_part=""
 if [ -n "$used_pct" ]; then
   used_int=$(printf "%.0f" "$used_pct")
   if [ "$used_int" -ge 80 ]; then
-    ctx_color="\033[0;31m"
+    ctx_color="$RED"
   elif [ "$used_int" -ge 50 ]; then
-    ctx_color="\033[0;33m"
+    ctx_color="$YELLOW"
   else
-    ctx_color="\033[0;32m"
+    ctx_color="$GREEN"
   fi
-  ctx_part=" ${ctx_color}ctx:${used_int}%\033[0m"
+  ctx_part=" ${ctx_color}ctx: ${used_int}% Used${RESET}"
 fi
 
 # --- user@host (like p10k context) ---
@@ -44,16 +51,17 @@ vim_part=""
 vim_mode=$(echo "$input" | jq -r '.vim.mode // empty')
 if [ -n "$vim_mode" ]; then
   if [ "$vim_mode" = "NORMAL" ]; then
-    vim_part=" \033[0;34m[N]\033[0m"
+    vim_part=" ${BLUE}[N]${RESET}"
   else
-    vim_part=" \033[0;32m[I]\033[0m"
+    vim_part=" ${GREEN}[I]${RESET}"
   fi
 fi
 
-printf "\033[0;34m%s\033[0m%s%s%s  \033[2m%s\033[0m  \033[2m%s\033[0m" \
-  "$short_cwd" \
+DIM=$(printf '\033[2m')
+printf "%s%s%s%s%s%s  %s%s%s  %s%s%s" \
+  "$BLUE" "$short_cwd" "$RESET" \
   "$git_part" \
   "$ctx_part" \
   "$vim_part" \
-  "$model" \
-  "$user_host"
+  "$DIM" "$model" "$RESET" \
+  "$DIM" "$user_host" "$RESET"
