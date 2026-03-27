@@ -5,5 +5,10 @@
   },
   "enabledPlugins": {
     "coderabbit@claude-plugins-official": true
+  },
+  "permissions": {
+    "ask": [
+      "Bash(aws-vault exec*)"
+    ]
   }
 }
