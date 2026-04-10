@@ -2,7 +2,7 @@
 opacity = 0.99
 
 [font]
-normal = { family = "MesloLGSDZ Nerd Font", style = "Regular" }
+normal = { family = "MesloLGM Nerd Font Mono", style = "Regular" }
 size = 20
 
 [terminal]
