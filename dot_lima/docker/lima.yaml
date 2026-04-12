@@ -3,10 +3,13 @@
 # Validated against Lima v2.1.0
 
 # === IMAGES — required in custom YAMLs (templates include this implicitly) ===
+# Debian 12 (Bookworm) chosen over Ubuntu: same systemd/apt compatibility,
+# ~150MB smaller idle footprint, provisioning scripts unchanged.
+# Alpine would save more RAM but requires a full provisioning rewrite (no systemd).
 images:
-  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-arm64.img"
+  - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-arm64.qcow2"
     arch: "aarch64"
-  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+  - location: "https://cloud.debian.org/images/cloud/bookworm/latest/debian-12-genericcloud-amd64.qcow2"
     arch: "x86_64"
 
 # Note: vmType: vz is the default on macOS ≥13.5 (Lima v1.0+); explicit for clarity
@@ -28,7 +31,7 @@ disk: "60GiB"
 # virtiofs requires vmType: vz — this is the fast path
 mountType: virtiofs
 mounts:
-  - location: "~/code"       # Only mount what containers actually need
+  - location: "~/projects"       # Only mount what containers actually need
     writable: true
   - location: "~/.docker"    # Config, credentials
     writable: true
