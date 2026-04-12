@@ -44,6 +44,13 @@ mountInotify: true
 networks:
   - vzNAT: true              # Gives VM a real IP; better than default user-mode NAT
 
+# === SOCKET FORWARDING — exposes rootless Docker socket to host ===
+# {{.UID}} resolves to the Lima guest UID; {{.Dir}} resolves to ~/.lima/docker
+# Without this, the socket exists inside the VM but is never surfaced to the host
+portForwards:
+  - guestSocket: "/run/user/{{.UID}}/docker.sock"
+    hostSocket: "{{.Dir}}/sock/docker.sock"
+
 # === CONTAINER RUNTIME ===
 containerd:
   system: false
