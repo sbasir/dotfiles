@@ -19,6 +19,11 @@ packages:
       - "tree"
       - "wireguard-tools"
       - "aws-vault"
+      - "lima"
+      - "docker"
+      - "docker-compose"
+      - "docker-credential-helper"
+      - "docker-buildx"
     casks:
       - "font-commit-mono-nerd-font"
       - "font-meslo-lg-nerd-font"
@@ -29,6 +34,8 @@ packages:
       - command:
           - curl -s https://sdk.cloud.google.com > install.sh
           - if [ ! -d ~/google-cloud-sdk ]; then bash install.sh --disable-prompts; fi
+          - mkdir -p ~/.docker/cli-plugins
+          - ln -sf $(brew --prefix)/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
   linux:
     apt_packages:
       - git

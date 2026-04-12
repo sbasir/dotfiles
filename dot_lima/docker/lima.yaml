@@ -1,0 +1,85 @@
+# ~/.lima/docker/lima.yaml
+# Optimised for M1 Pro 16GB under memory pressure
+# Validated against Lima v2.1.0
+
+# === IMAGES — required in custom YAMLs (templates include this implicitly) ===
+images:
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-arm64.img"
+    arch: "aarch64"
+  - location: "https://cloud-images.ubuntu.com/releases/24.04/release/ubuntu-24.04-server-cloudimg-amd64.img"
+    arch: "x86_64"
+
+# Note: vmType: vz is the default on macOS ≥13.5 (Lima v1.0+); explicit for clarity
+vmType: vz
+
+# === ROSETTA — vmOpts.vz.rosetta replaces deprecated top-level rosetta: key ===
+vmOpts:
+  vz:
+    rosetta:
+      enabled: true         # Fast x86_64 userspace translation for amd64 images
+      binfmt: true
+
+# === RESOURCE CAPS — tune to your pressure ===
+cpus: 4
+memory: "3GiB"
+disk: "60GiB"
+
+# === MOUNTS — scope tightly, avoid mounting all of ~ ===
+# virtiofs requires vmType: vz — this is the fast path
+mountType: virtiofs
+mounts:
+  - location: "~/code"       # Only mount what containers actually need
+    writable: true
+  - location: "~/.docker"    # Config, credentials
+    writable: true
+  # /tmp/lima removed — not needed for Docker; was causing non-existent dir warning
+
+# Mount inotify — needed if you're running file-watch processes in containers
+mountInotify: true
+
+# === NETWORKING ===
+networks:
+  - vzNAT: true              # Gives VM a real IP; better than default user-mode NAT
+
+# === CONTAINER RUNTIME ===
+containerd:
+  system: false
+  user: false                # containerd managed by Docker, not Lima
+
+provision:
+  - mode: system
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      command -v docker >/dev/null 2>&1 && exit 0
+      export DEBIAN_FRONTEND=noninteractive
+      curl -fsSL https://get.docker.com | sh
+      # Rootless setup (avoids root daemon — better security posture)
+      systemctl disable --now docker
+      apt-get install -y uidmap dbus-user-session
+  - mode: user
+    script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      systemctl --user start dbus
+      dockerd-rootless-setuptool.sh install
+      docker context use rootless
+
+probes:
+  - script: |
+      #!/bin/bash
+      set -eux -o pipefail
+      if ! timeout 30s bash -c "until command -v docker >/dev/null 2>&1; do sleep 3; done"; then
+        echo >&2 "docker is not installed yet"
+        exit 1
+      fi
+      if ! timeout 60s bash -c "until docker info >/dev/null 2>&1; do sleep 3; done"; then
+        echo >&2 "docker daemon is not ready"
+        exit 1
+      fi
+    hint: See /var/log/cloud-init-output.log in the Lima VM
+
+hostResolver:
+  enabled: true
+  hosts:
+    host.docker.internal: host.lima.internal
