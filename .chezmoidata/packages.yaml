@@ -24,6 +24,7 @@ packages:
       - "docker-compose"
       - "docker-credential-helper"
       - "docker-buildx"
+      - "k3d"
     casks:
       - "font-commit-mono-nerd-font"
       - "font-meslo-lg-nerd-font"
