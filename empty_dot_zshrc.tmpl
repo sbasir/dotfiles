@@ -56,10 +56,12 @@ source ~/google-cloud-sdk/path.zsh.inc
 export CONTEXT7_API_KEY={{ keyring "context7" "api" | quote }}
 
 # Lima/Docker socket — sourced once at shell start
-export DOCKER_HOST="unix://${HOME}/.lima/docker/sock/docker.sock"
+# export DOCKER_HOST="unix://${HOME}/.lima/docker/sock/docker.sock"
 
 # Convenience aliases
 alias lstart='limactl start docker'
 alias lstop='limactl stop docker'
 alias lshell='limactl shell docker'
 alias lstatus='limactl list'
+
+source <(colima completion zsh)

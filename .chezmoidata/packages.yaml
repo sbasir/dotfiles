@@ -20,6 +20,7 @@ packages:
       - "wireguard-tools"
       - "aws-vault"
       - "lima"
+      - "colima"
       - "docker"
       - "docker-compose"
       - "docker-credential-helper"
