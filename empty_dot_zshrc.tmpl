@@ -47,12 +47,6 @@ if command -v go &> /dev/null; then
   export PATH="$PATH:$GOPATH/bin"
 fi
 
-{{ end }}
-
-eval "$(uv generate-shell-completion zsh)"
-source ~/google-cloud-sdk/completion.zsh.inc
-source ~/google-cloud-sdk/path.zsh.inc
-
 export CONTEXT7_API_KEY={{ keyring "context7" "api" | quote }}
 
 # Lima/Docker socket — sourced once at shell start
@@ -65,3 +59,9 @@ alias lshell='limactl shell docker'
 alias lstatus='limactl list'
 
 source <(colima completion zsh)
+{{ end }}
+
+eval "$(uv generate-shell-completion zsh)"
+source ~/google-cloud-sdk/completion.zsh.inc
+source ~/google-cloud-sdk/path.zsh.inc
+
