@@ -1,4 +1,15 @@
 {
+  "permissions": {
+    "allow": [
+      "Bash(*aws-vault exec ba.m2.staging*)",
+      "Bash(*aws-vault exec ba.m2.dev*)",
+      "Bash(sleep*)",
+      "Bash(date*)"
+    ],
+    "ask": [
+      "Bash(*aws-vault exec *prod*)"
+    ]
+  },
   "statusLine": {
     "type": "command",
     "command": "sh ~/.claude/statusline-command.sh"
@@ -6,15 +17,9 @@
   "enabledPlugins": {
     "coderabbit@claude-plugins-official": true
   },
-  "permissions": {
-    "ask": [
-      "Bash(*aws-vault exec *prod*)"
-    ],
-    "allow": [
-      "Bash(*aws-vault exec ba.m2.staging*)",
-      "Bash(*aws-vault exec ba.m2.dev*)",
-      "Bash(sleep*)",
-      "Bash(date*)"
-    ]
+  "voiceEnabled": true,
+  "voice": {
+    "enabled": true,
+    "mode": "hold"
   }
 }
