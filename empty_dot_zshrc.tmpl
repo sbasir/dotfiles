@@ -60,8 +60,41 @@ alias lstatus='limactl list'
 
 source <(colima completion zsh)
 {{ end }}
+{{- if eq .chezmoi.os "linux" }}
+# --- Linux (remote workspace) ---
+# pnpm (installed via get.pnpm.io to $HOME/.local/share/pnpm)
+export PNPM_HOME="$HOME/.local/share/pnpm"
+case ":$PATH:" in
+  *":$PNPM_HOME:"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
+# Claude Code (installed to $HOME/.local/bin)
+[[ -d "$HOME/.local/bin" ]] && case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
+
+if command -v go &> /dev/null; then
+  export GOPATH="$HOME/go"
+  export PATH="$PATH:$GOPATH/bin"
+fi
+
+# ssh-agent: load id_ed25519 (restored from SSM by boot-secrets.sh)
+if [[ -z "$SSH_AUTH_SOCK" ]] || ! ssh-add -l &>/dev/null; then
+  eval "$(ssh-agent -s)" > /dev/null 2>&1
+  [[ -f "$HOME/.ssh/id_ed25519" ]] && ssh-add "$HOME/.ssh/id_ed25519" 2>/dev/null
+fi
+
+# gnome-keyring: libsecret backend for aws-vault + GitHub Copilot CLI.
+# Keyring DB is on S3 Files (symlinked by s3files-mount.sh) so creds survive terminate.
+# Empty password — SSH key + SG is the real boundary.
+if command -v gnome-keyring-daemon &>/dev/null && [[ -z "$GNOME_KEYRING_CONTROL" ]]; then
+  eval "$(gnome-keyring-daemon --start --daemonize --components=secrets 2>/dev/null)"
+  export SSH_AUTH_SOCK GNOME_KEYRING_CONTROL
+  printf '' | gnome-keyring-daemon --replace --unlock --components=secrets >/dev/null 2>&1 || true
+fi
+{{ end }}
 
 eval "$(uv generate-shell-completion zsh)"
 source ~/google-cloud-sdk/completion.zsh.inc
 source ~/google-cloud-sdk/path.zsh.inc
-
