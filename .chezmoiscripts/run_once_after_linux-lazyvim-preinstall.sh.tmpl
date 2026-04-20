@@ -1,0 +1,42 @@
+{{ if eq .chezmoi.os "linux" -}}
+#!/bin/bash
+# Preinstall LazyVim plugins + treesitter parsers in headless mode so the
+# first interactive `nvim` on a fresh instance (e.g. a newly-baked AMI or a
+# brand-new VM) skips the annoying "installing plugins..." screen.
+#
+# run_once_after_*: fires after file operations in `chezmoi apply`, so the
+# .chezmoiexternal.toml clone of lazyvim-starter into ~/.config/nvim is in
+# place. Hashed by content — re-runs if the script itself changes.
+#
+# Linux-guarded: on macOS we generally run nvim interactively and want to
+# see the plugin sync; on Linux this is always headless provisioning.
+#
+# Idempotent: Lazy sync is a no-op when plugins are up to date.
+
+set -euo pipefail
+
+if ! command -v nvim >/dev/null 2>&1; then
+    echo "[lazyvim-preinstall] nvim not installed — skipping"
+    exit 0
+fi
+
+NVIM_CONFIG="${HOME}/.config/nvim"
+if [ ! -d "${NVIM_CONFIG}" ]; then
+    echo "[lazyvim-preinstall] ${NVIM_CONFIG} missing — skipping"
+    exit 0
+fi
+
+echo "[lazyvim-preinstall] Lazy! sync (this may take a few minutes on first run)"
+# Lazy! (with the bang) forces non-interactive mode. +qa ensures we exit.
+# Redirect stderr so noisy plugin build output lands in the Packer log.
+if ! nvim --headless "+Lazy! sync" +qa 2>&1; then
+    echo "[lazyvim-preinstall] Lazy sync reported warnings (non-fatal)"
+fi
+
+echo "[lazyvim-preinstall] TSUpdateSync (treesitter parsers)"
+if ! nvim --headless "+TSUpdateSync" +qa 2>&1; then
+    echo "[lazyvim-preinstall] Treesitter update reported warnings (non-fatal)"
+fi
+
+echo "[lazyvim-preinstall] Done."
+{{ end -}}
