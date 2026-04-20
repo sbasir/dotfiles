@@ -7,3 +7,5 @@
 [credential]
 	helper = !aws codecommit credential-helper $@
 	UseHttpPath = true
+[include]
+    path = .gitconfig.coderabbit
