@@ -79,7 +79,7 @@ sudo tar xzf {{ .file | quote }} -C {{ .target | quote }} --strip-components=1
 
 # Optional symlink
 {{ if .symlink }}
-sudo ln -sf {{ .target | quote }}{{ .binary | quote}} {{ .symlink | quote }}
+sudo ln -sf {{ printf "%s%s" .target .binary | quote }} {{ .symlink | quote }}
 {{ end }}
 
 # Cleanup
