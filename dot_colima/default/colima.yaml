@@ -258,6 +258,12 @@ sshPort: 0
 #
 # Colima default behaviour: $HOME is mounted as writable.
 # Default: []
+#
+# NOTE: Defining `mounts:` REPLACES the default ~ mount — it does not merge.
+# Verified in environment/vm/lima/yaml.go: the default ~ mount is only
+# injected when the list is empty. With entries below, ~/.ssh, ~/.aws,
+# ~/.gitconfig, etc. are NOT accessible to containers as bind sources.
+# This tight scope is intentional — add paths here if a container needs them.
 mounts:
   - location: ~/projects
     writable: true

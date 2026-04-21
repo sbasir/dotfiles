@@ -8,7 +8,7 @@ size = 18
 [terminal]
 osc52 = "OnlyCopy"
 
-# Source - https://stackoverflow.com/a
+# Source - Stack Overflow (specific answer URL not captured)
 # Posted by Acaibird
 # Retrieved 2026-01-04, License - CC BY-SA 4.0
 [keyboard]
@@ -59,8 +59,6 @@ bindings = [
   { key = "Key9", mods = "Alt", chars = "\u001b9" },
 
   # Alt + common punctuation
-  { key = "Period", mods = "Alt", chars = "\u001b." },
-  { key = "Slash", mods = "Alt", chars = "\u001b/" },
   { key = "Comma", mods = "Alt", chars = "\u001b," },
   { key = "Semicolon", mods = "Alt", chars = "\u001b;" },
   { key = "Minus", mods = "Alt", chars = "\u001b-" },
@@ -68,8 +66,6 @@ bindings = [
   { key = "Space", mods = "Alt", chars = "\u001b " },
 
   # Alt + navigation / editing
-  { key = "Left", mods = "Alt", chars = "\u001bb" },           # Alt + Left → back one word
-  { key = "Right", mods = "Alt", chars = "\u001bf" },          # Alt + Right → forward one word
   { key = "Backspace", mods = "Alt", chars = "\u001b\u007f" }, # Alt + Backspace → delete word before cursor
 
   # Shift + Return

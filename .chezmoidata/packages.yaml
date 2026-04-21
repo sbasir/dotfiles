@@ -40,7 +40,7 @@ packages:
           - mkdir -p ~/.docker/cli-plugins
           - ln -sf $(brew --prefix)/bin/docker-buildx ~/.docker/cli-plugins/docker-buildx
       - command:
-          - if [ ! $(brew tap | grep -q hashicorp/tap) ]; then brew tap hashicorp/tap; fi
+          - if ! brew tap | grep -q hashicorp/tap; then brew tap hashicorp/tap; fi
           - if ! brew list hashicorp/tap/packer >/dev/null 2>&1; then brew install hashicorp/tap/packer; fi
   linux:
     apt_packages:
@@ -67,7 +67,7 @@ packages:
           - curl -LsSf https://astral.sh/uv/install.sh | sh
       - command:
           - curl -s https://sdk.cloud.google.com > install.sh
-          - if [ ! -d ~/google-cloud-sdk ]; then bash install.sh --disable-prompts 2>&1 > /dev/null; fi
+          - if [ ! -d ~/google-cloud-sdk ]; then bash install.sh --disable-prompts >/dev/null 2>&1; fi
       - command:
           - if ! command -v pnpm >/dev/null 2>&1; then curl -fsSL https://get.pnpm.io/install.sh | sh -; fi
       - command:
@@ -75,7 +75,7 @@ packages:
       - command:
           - wget -O - https://apt.releases.hashicorp.com/gpg | sudo gpg --dearmor -o /usr/share/keyrings/hashicorp-archive-keyring.gpg
           - echo "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/hashicorp-archive-keyring.gpg] https://apt.releases.hashicorp.com $(grep -oP '(?<=UBUNTU_CODENAME=).*' /etc/os-release || lsb_release -cs) main" | sudo tee /etc/apt/sources.list.d/hashicorp.list
-          - sudo apt update && sudo apt install packer terraform
+          - sudo apt update && sudo apt install -y packer terraform
       - command:
           - bash <(curl https://raw.githubusercontent.com/rhysd/actionlint/main/scripts/download-actionlint.bash) latest /usr/local/bin
     tar_install_packages:

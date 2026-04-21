@@ -17,5 +17,5 @@ exact = true
 stripComponents = 1
 [".config/nvim"]
 type = "git-repo"
-url = "git@github.com:sbasir/lazyvim-starter.git"
+url = "https://github.com/sbasir/lazyvim-starter.git"
 refreshPeriod = "1h"
