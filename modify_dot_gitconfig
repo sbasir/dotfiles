@@ -24,8 +24,6 @@ cat <<'EOF'
 [credential]
 	helper = !aws codecommit credential-helper $@
 	UseHttpPath = true
-[include]
-    path = .gitconfig.coderabbit
 EOF
 
 # --- preserve external sections from the current file ---
