@@ -92,6 +92,25 @@ _warp_ca_guard() {
 autoload -Uz add-zsh-hook
 add-zsh-hook precmd _warp_ca_guard
 _warp_ca_guard   # run once at shell start so the first command sees it
+
+# p10k custom segment: shows "W" in orange in the right prompt when the
+# WARP CA envs are active (i.e. AWS_CA_BUNDLE is set by _warp_ca_guard).
+# Put next to the AWS segment so "am I talking to AWS via WARP?" is
+# visible at a glance. Insertion is idempotent — guard against double-add
+# if .zshrc is sourced again in the same shell.
+function prompt_warp_ca() {
+    [[ -n "$AWS_CA_BUNDLE" ]] || return
+    p10k segment -f 208 -t 'W'
+}
+function instant_prompt_warp_ca() { prompt_warp_ca }
+
+if (( ${+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS} )) \
+    && [[ -z "${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[(r)warp_ca]}" ]]; then
+    typeset -ga POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(
+        warp_ca
+        "${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]}"
+    )
+fi
 {{ end }}
 {{- if eq .chezmoi.os "linux" }}
 # --- Linux (remote workspace) ---
