@@ -1,0 +1,39 @@
+#!/bin/bash
+# modify_dot_gitconfig — chezmoi "modify" script for ~/.gitconfig.
+#
+# chezmoi invokes this with the current ~/.gitconfig on stdin and writes
+# the stdout to disk. If stdout matches the current file byte-for-byte,
+# chezmoi skips the write — so drift from external tools that we choose
+# to tolerate is not reported.
+#
+# We emit a fixed baseline and then pass through any sections that
+# external tooling (currently: CodeRabbit CLI) auto-injects. CodeRabbit
+# owns its machineId and rewrites ~/.gitconfig when it feels like it;
+# treating that section as "ours" would cause endless drift loops.
+
+set -euo pipefail
+
+# --- baseline (chezmoi-owned) ---
+cat <<'EOF'
+[user]
+  name = Sofy Basir
+  email = sofy.basir@gmail.com
+
+[init]
+  defaultBranch = main
+[credential]
+	helper = !aws codecommit credential-helper $@
+	UseHttpPath = true
+[include]
+    path = .gitconfig.coderabbit
+EOF
+
+# --- preserve external sections from the current file ---
+# Currently: [coderabbit]. Extend this list if other tools start writing
+# to ~/.gitconfig — match ^\[sectionName\] and print until the next
+# top-level section header or EOF.
+awk '
+    /^\[coderabbit\]/ { in_section=1; print; next }
+    /^\[/             { if (in_section) in_section=0 }
+    in_section        { print }
+' /dev/stdin

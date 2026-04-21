@@ -59,6 +59,28 @@ alias lshell='limactl shell docker'
 alias lstatus='limactl list'
 
 source <(colima completion zsh)
+
+# --- Cloudflare WARP TLS-inspection workaround (dynamic precmd guard) ---
+# When WARP is running, its Gateway CA intercepts outbound HTTPS. AWS SDK /
+# pip / npm / go don't consult the macOS keychain, so they reject the cert
+# unless pointed at WARP's CA via *_CA_BUNDLE envs. Generate the bundle
+# once with `warp-ca` (~/.local/bin/warp-ca); this hook flips the envs on
+# or off per prompt based on live WARP daemon state, so toggling WARP
+# takes effect immediately without reopening the terminal. pgrep on
+# macOS is ~1-2ms — negligible next to what p10k already does per prompt.
+_warp_ca_guard() {
+    if pgrep -q "Cloudflare WARP" 2>/dev/null && [[ -f "$HOME/.warp-ca.pem" ]]; then
+        export AWS_CA_BUNDLE="$HOME/.warp-ca.pem"
+        export REQUESTS_CA_BUNDLE="$AWS_CA_BUNDLE"
+        export NODE_EXTRA_CA_CERTS="$AWS_CA_BUNDLE"
+        export SSL_CERT_FILE="$AWS_CA_BUNDLE"
+    else
+        unset AWS_CA_BUNDLE REQUESTS_CA_BUNDLE NODE_EXTRA_CA_CERTS SSL_CERT_FILE
+    fi
+}
+autoload -Uz add-zsh-hook
+add-zsh-hook precmd _warp_ca_guard
+_warp_ca_guard   # run once at shell start so the first command sees it
 {{ end }}
 {{- if eq .chezmoi.os "linux" }}
 # --- Linux (remote workspace) ---

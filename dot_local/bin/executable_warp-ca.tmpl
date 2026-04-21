@@ -1,0 +1,49 @@
+{{ if eq .chezmoi.os "darwin" -}}
+#!/bin/bash
+# warp-ca — Extract Cloudflare WARP root CA(s) from the macOS System
+# keychain to a PEM file suitable for AWS_CA_BUNDLE, REQUESTS_CA_BUNDLE,
+# NODE_EXTRA_CA_CERTS, SSL_CERT_FILE.
+#
+# Why: WARP with Gateway TLS inspection presents its own cert for every
+# outbound HTTPS connection. Most language SDKs ship their own CA bundle
+# and don't read the macOS keychain, so aws-vault / aws CLI / pip / npm
+# reject the inspected cert. Pointing those tools at WARP's root makes
+# them trust the interception.
+#
+# Usage:
+#   warp-ca [output-path]   # default: ~/.warp-ca.pem
+#
+# Paired with a precmd hook in .zshrc: AWS_CA_BUNDLE and friends flip on
+# whenever the WARP daemon is running and this file exists, off otherwise.
+
+set -euo pipefail
+
+OUT="${1:-${HOME}/.warp-ca.pem}"
+TMP=$(mktemp)
+trap 'rm -f "$TMP"' EXIT
+
+# The CN filter is "Cloudflare" — covers "Cloudflare for Teams ..." and
+# "Gateway CA" variants. Customise with `-c <your-ca-cn>` if your tenant
+# uses a different common name.
+security find-certificate -a -p -c Cloudflare /Library/Keychains/System.keychain > "$TMP" || true
+
+if [ ! -s "$TMP" ] || ! grep -q 'BEGIN CERTIFICATE' "$TMP"; then
+    echo "No Cloudflare CA found in /Library/Keychains/System.keychain." >&2
+    echo "  - Confirm WARP is installed and the team's Gateway CA is pushed." >&2
+    echo "  - Edit the -c filter in this script if your tenant uses a custom CN." >&2
+    exit 1
+fi
+
+mv "$TMP" "$OUT"
+trap - EXIT
+
+COUNT=$(grep -c 'BEGIN CERTIFICATE' "$OUT")
+echo "Wrote ${COUNT} certificate(s) to ${OUT}"
+echo ""
+echo "Exports (paired with the .zshrc precmd hook, these flip on/off"
+echo "automatically as WARP is toggled):"
+echo "  export AWS_CA_BUNDLE=${OUT}"
+echo "  export REQUESTS_CA_BUNDLE=${OUT}   # python tooling"
+echo "  export NODE_EXTRA_CA_CERTS=${OUT}  # node tooling"
+echo "  export SSL_CERT_FILE=${OUT}        # go tooling"
+{{ end -}}

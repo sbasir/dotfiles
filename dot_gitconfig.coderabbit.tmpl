@@ -1,9 +1,0 @@
-{{- /* .coderabbit_id is machine-local (set in ~/.config/chezmoi/chezmoi.toml
-       [data]). On fresh machines — Packer builders, new VMs, etc. — it isn't
-       set, so guard with hasKey to avoid a template-evaluation error. When
-       absent, render an empty file; the coderabbit CLI will generate its own
-       machineId on first use. */ -}}
-{{- if hasKey . "coderabbit_id" -}}
-[coderabbit]
-    machineId = {{ .coderabbit_id | quote }}
-{{- end -}}
