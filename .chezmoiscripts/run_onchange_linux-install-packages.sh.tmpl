@@ -2,17 +2,26 @@
 #!/bin/bash
 set -e
 
+# Suppress debconf TTY-fallback chatter + the "apt has no stable CLI" warning
+# when this script runs headless (Packer builds, cloud-init, etc.). No effect
+# on interactive runs beyond silencing the same warnings.
+# shellcheck disable=SC2034  # exported via env, some tools read it indirectly
+export DEBIAN_FRONTEND=noninteractive
+export DEBCONF_NONINTERACTIVE_SEEN=true
+# Use apt-get (stable CLI, unlike `apt`) with Dpkg::Use-Pty=0 so dpkg doesn't
+# try to reopen stdin. Array form keeps shellcheck SC2086 clean when expanded.
+APT_GET=(sudo apt-get -o=Dpkg::Use-Pty=0)
 
 echo "=== Installing APT packages ==="
-sudo apt update -y
+"${APT_GET[@]}" update -q
 {{ range .packages.linux.apt_packages -}}
-sudo apt install -y {{ . | quote }}
+"${APT_GET[@]}" install -y -q {{ . | quote }}
 {{ end }}
 
 # --- Locale Fix --- 
 DESIRED_LOCALE="${LC_ALL:-${LANG:-C.UTF-8}}"
 echo "Using locale: $DESIRED_LOCALE"
-sudo apt install -y locales
+"${APT_GET[@]}" install -y -q locales
 if ! locale -a | grep -qi "^${DESIRED_LOCALE}$"; then
   echo "Generating locale: $DESIRED_LOCALE" 
   sudo sed -i "s/# ${DESIRED_LOCALE} UTF-8/${DESIRED_LOCALE} UTF-8/" /etc/locale.gen || true 
@@ -52,7 +61,7 @@ echo "=== Installing unattended packages ==="
 echo "=== Installing .deb packages ==="
 {{ range .packages.linux.deb_install_packages -}}
 curl -sL -o {{ .file | quote }} {{ .url | quote }}
-sudo apt install -y ./{{ .file | quote }}
+"${APT_GET[@]}" install -y -q ./{{ .file | quote }}
 rm -f {{ .file | quote }}
 {{ end }}
 

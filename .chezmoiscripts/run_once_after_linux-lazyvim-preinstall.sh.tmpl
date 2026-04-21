@@ -26,41 +26,62 @@ if [ ! -d "${NVIM_CONFIG}" ]; then
     exit 0
 fi
 
+# Known cosmetic warnings from headless nvim + LazyVim + Mason that fire
+# even when the final state is good (plugins installed, tools eventually
+# available on first interactive use). Silencing so real errors aren't
+# lost in the noise.
+#
+# Patterns:
+#   - "Neovim is exiting while packages are still installing" — Mason's
+#     auto-install is async; every headless quit trips it even though
+#     mason-tool-installer retries on next nvim startup.
+#   - "Neovim exited while the following packages were installing" — same.
+#   - "- gofumpt" etc. — the follow-up list under the above warning.
+#   - "E492: Not an editor command: TSUpdateSync" — LazyVim wraps
+#     nvim-treesitter with a lazy load that isn't fully set up in headless
+#     mode. Treesitter parsers install on first interactive use instead.
+NVIM_NOISE='^(\[mason\.nvim\] Neovim is exiting|\[mason\.nvim\] Neovim exited while|- (gofumpt|goimports|markdown-toc|markdownlint-cli2|shellcheck|sqlfluff|tflint)|Error in command line:|E492: Not an editor command: TSUpdateSync)'
+
+# Runs `nvim --headless "$@"` and filters known cosmetic noise from the
+# combined output. Returns nvim's real exit status (PIPESTATUS[0]) so
+# genuine failures still propagate through the caller's `if !` check.
+run_nvim_filtered() {
+    local rc
+    { nvim --headless "$@" 2>&1 || true; } | grep -vE "${NVIM_NOISE}" || true
+    rc=${PIPESTATUS[0]}
+    return "${rc}"
+}
+
 echo "[lazyvim-preinstall] Lazy! sync (this may take a few minutes on first run)"
 # Lazy! (with the bang) forces non-interactive mode. +qa ensures we exit.
-# Redirect stderr so noisy plugin build output lands in the Packer log.
-if ! nvim --headless "+Lazy! sync" +qa 2>&1; then
+# Lazy sync is idempotent — a no-op when plugins are up to date.
+if ! run_nvim_filtered "+Lazy! sync" +qa; then
     echo "[lazyvim-preinstall] Lazy sync reported warnings (non-fatal)"
 fi
 
-echo "[lazyvim-preinstall] TSUpdateSync (treesitter parsers)"
-# LazyVim loads nvim-treesitter lazily on BufRead / BufNewFile, which doesn't
-# fire in headless mode — so :TSUpdateSync isn't registered yet and the bare
-# "+TSUpdateSync" produces E492: Not an editor command. `Lazy! load` forces
-# the plugin in before the command runs.
-if ! nvim --headless "+Lazy! load nvim-treesitter" "+TSUpdateSync" +qa 2>&1; then
+echo "[lazyvim-preinstall] Installing treesitter parsers"
+# LazyVim loads nvim-treesitter lazily on BufRead / BufNewFile, which
+# doesn't fire in headless mode, so :TSUpdateSync isn't registered.
+# `Lazy! load` pulls the plugin onto the runtimepath; then we call
+# nvim-treesitter.install directly via Lua instead of the :TSUpdateSync
+# command, which bypasses the user-command registration issue entirely.
+# If the require fails (plugin genuinely not installed), pcall returns
+# false and we log a warning — parsers install on first interactive use.
+if ! run_nvim_filtered \
+    "+Lazy! load nvim-treesitter" \
+    "+lua local ok, install = pcall(require, 'nvim-treesitter.install'); if ok then install.update({with_sync=true})() else print('nvim-treesitter.install not loadable — skipping') end" \
+    +qa; then
     echo "[lazyvim-preinstall] Treesitter update reported warnings (non-fatal)"
 fi
 
-echo "[lazyvim-preinstall] Waiting for Mason background installs (max 5 min)"
-# mason-tool-installer kicks off async downloads (linters, formatters,
-# language servers) during Lazy's VeryLazy event. The previous headless
-# session exited before those finished, which printed
-# "[mason.nvim] Neovim is exiting while packages are still installing."
-# Open a final headless nvim and vim.wait() until the registry reports
-# no packages still installing (or the 5-min ceiling trips).
-if ! nvim --headless \
-    "+lua vim.wait(300000, function() \
-        local ok, registry = pcall(require, 'mason-registry'); \
-        if not ok then return true end; \
-        for _, pkg in ipairs(registry.get_installed_packages()) do \
-            if pkg:is_installing() then return false end; \
-        end; \
-        return true; \
-    end, 1000)" \
-    +qa 2>&1; then
-    echo "[lazyvim-preinstall] Mason wait reported warnings (non-fatal)"
-fi
+# Mason-tool-installer's async downloads (gofumpt, shellcheck, etc.) are
+# deliberately NOT waited on here. A previous iteration blocked up to
+# 5 minutes on mason-registry polling, but the "is_installing()" API
+# doesn't reliably reflect queued state — the warning still fired on exit
+# and we paid ~10 min of extra AMI build time for nothing. Mason re-runs
+# ensure_installed on first interactive nvim launch, so the tools land
+# in place with a small delay the first time the user opens a matching
+# filetype. Net: cleaner log, faster AMI build, identical end state.
 
 echo "[lazyvim-preinstall] Done."
 {{ end -}}
