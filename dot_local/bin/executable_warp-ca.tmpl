@@ -1,24 +1,26 @@
 {{ if eq .chezmoi.os "darwin" -}}
 #!/bin/bash
 # warp-ca — Extract Cloudflare WARP root CA(s) from the macOS System
-# keychain to a PEM file suitable for AWS_CA_BUNDLE, REQUESTS_CA_BUNDLE,
-# NODE_EXTRA_CA_CERTS, SSL_CERT_FILE.
+# keychain to a PEM file, and produce a combined Mozilla+WARP bundle
+# suitable for AWS_CA_BUNDLE, REQUESTS_CA_BUNDLE, NODE_EXTRA_CA_CERTS,
+# SSL_CERT_FILE.
 #
-# Why: WARP with Gateway TLS inspection presents its own cert for every
-# outbound HTTPS connection. Most language SDKs ship their own CA bundle
-# and don't read the macOS keychain, so aws-vault / aws CLI / pip / npm
-# reject the inspected cert. Pointing those tools at WARP's root makes
-# them trust the interception.
+# Why combined: the WARP-only bundle *replaces* the system trust store.
+# Endpoints that bypass WARP (e.g. AWS STS/EKS in eu-west-1, which are
+# split-tunnelled by policy) present real Amazon-issued certs — validation
+# fails under the WARP-only bundle. A combined bundle (Mozilla system roots
+# + WARP CA) works whether WARP is off, on-bypass, or on-inspecting.
 #
 # Usage:
-#   warp-ca [output-path]   # default: ~/.warp-ca.pem
+#   warp-ca [output-path]   # default: ~/.warp-ca.pem (combined at .pem.combined)
 #
-# Paired with a precmd hook in .zshrc: AWS_CA_BUNDLE and friends flip on
-# whenever the WARP daemon is running and this file exists, off otherwise.
+# Paired with a precmd hook in .zshrc: AWS_CA_BUNDLE and friends prefer the
+# combined file when present, fall back to the raw WARP CA otherwise.
 
 set -euo pipefail
 
 OUT="${1:-${HOME}/.warp-ca.pem}"
+COMBINED="${OUT%.pem}-combined.pem"
 TMP=$(mktemp)
 trap 'rm -f "$TMP"' EXIT
 
@@ -38,12 +40,39 @@ mv "$TMP" "$OUT"
 trap - EXIT
 
 COUNT=$(grep -c 'BEGIN CERTIFICATE' "$OUT")
-echo "Wrote ${COUNT} certificate(s) to ${OUT}"
+echo "Wrote ${COUNT} WARP certificate(s) to ${OUT}"
+
+# Build combined bundle (system Mozilla roots + WARP CA).
+SYSTEM_CA=""
+if command -v python3 >/dev/null 2>&1; then
+    SYSTEM_CA=$(python3 -c 'import certifi; print(certifi.where())' 2>/dev/null || true)
+fi
+if [ -z "$SYSTEM_CA" ] || [ ! -f "$SYSTEM_CA" ]; then
+    # Fallbacks if certifi isn't available
+    for candidate in /etc/ssl/cert.pem /opt/homebrew/etc/ca-certificates/cert.pem /usr/local/etc/ca-certificates/cert.pem; do
+        if [ -f "$candidate" ]; then SYSTEM_CA="$candidate"; break; fi
+    done
+fi
+
+if [ -n "$SYSTEM_CA" ] && [ -f "$SYSTEM_CA" ]; then
+    cat "$SYSTEM_CA" "$OUT" > "$COMBINED"
+    SYS_COUNT=$(grep -c 'BEGIN CERTIFICATE' "$SYSTEM_CA")
+    COMBINED_COUNT=$(grep -c 'BEGIN CERTIFICATE' "$COMBINED")
+    echo "Wrote combined bundle (${SYS_COUNT} system + ${COUNT} WARP = ${COMBINED_COUNT}) to ${COMBINED}"
+    echo "  system source: ${SYSTEM_CA}"
+else
+    echo "WARN: could not locate system CA bundle — combined file not built." >&2
+    echo "  install python3-certifi or create ${COMBINED} manually." >&2
+fi
 echo ""
 echo "Exports (paired with the .zshrc precmd hook, these flip on/off"
-echo "automatically as WARP is toggled):"
-echo "  export AWS_CA_BUNDLE=${OUT}"
-echo "  export REQUESTS_CA_BUNDLE=${OUT}   # python tooling"
-echo "  export NODE_EXTRA_CA_CERTS=${OUT}  # node tooling"
-echo "  export SSL_CERT_FILE=${OUT}        # go tooling"
+echo "automatically as WARP is toggled; the hook prefers the combined file):"
+echo "  export AWS_CA_BUNDLE=${COMBINED}"
+echo "  export REQUESTS_CA_BUNDLE=${COMBINED}   # python tooling"
+echo "  export NODE_EXTRA_CA_CERTS=${COMBINED}  # node tooling"
+echo "  export SSL_CERT_FILE=${COMBINED}        # go tooling"
+echo ""
+echo "If a tool breaks on the combined bundle (rare — unusually strict cert"
+echo "chain handling), fall back to the WARP-only file ${OUT} or run:"
+echo "  env -u AWS_CA_BUNDLE -u REQUESTS_CA_BUNDLE -u SSL_CERT_FILE <cmd>"
 {{ end -}}

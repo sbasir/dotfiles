@@ -17,5 +17,6 @@
   "enabledPlugins": {
     "coderabbit@claude-plugins-official": true
   },
+  "agentPushNotifEnabled": true,
   "voiceEnabled": true
 }

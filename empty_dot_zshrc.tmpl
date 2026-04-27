@@ -80,8 +80,20 @@ _warp_ca_guard() {
         && warp-cli status 2>/dev/null | grep -q "Status update: Connected"; then
         connected=true
     fi
-    if $connected && [[ -f "$HOME/.warp-ca.pem" ]]; then
-        export AWS_CA_BUNDLE="$HOME/.warp-ca.pem"
+    # Prefer the combined bundle (system Mozilla roots + WARP CA) so tools
+    # still trust non-intercepted endpoints (AWS STS/EKS eu-west-1 split-
+    # tunnel past WARP and present real Amazon certs). Fall back to the
+    # WARP-only file if combined hasn't been built yet.
+    local bundle=""
+    if $connected; then
+        if [[ -f "$HOME/.warp-ca-combined.pem" ]]; then
+            bundle="$HOME/.warp-ca-combined.pem"
+        elif [[ -f "$HOME/.warp-ca.pem" ]]; then
+            bundle="$HOME/.warp-ca.pem"
+        fi
+    fi
+    if [[ -n "$bundle" ]]; then
+        export AWS_CA_BUNDLE="$bundle"
         export REQUESTS_CA_BUNDLE="$AWS_CA_BUNDLE"
         export NODE_EXTRA_CA_CERTS="$AWS_CA_BUNDLE"
         export SSL_CERT_FILE="$AWS_CA_BUNDLE"
