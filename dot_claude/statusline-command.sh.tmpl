@@ -1,5 +1,7 @@
 #!/bin/bash
-# Claude Code status line — mirrors p10k segments: dir, git, model, context window, user@host
+# Claude Code status line — two lines:
+#   line 1: ccusage (model + spend + burn) — falls back to model name if ccusage is absent
+#   line 2: dir, git, ctx, vim, user@host
 # Managed by chezmoi. Edit via: chezmoi edit ~/.claude/statusline-command.sh
 input=$(cat)
 
@@ -17,6 +19,10 @@ YELLOW=$(printf '\033[0;33m')
 RED=$(printf '\033[0;31m')
 GREEN=$(printf '\033[0;32m')
 BLUE=$(printf '\033[0;34m')
+DIM=$(printf '\033[2m')
+
+# --- model (used as line-1 fallback if ccusage is absent) ---
+model=$(echo "$input" | jq -r '.model.display_name // empty')
 
 # --- git branch (like p10k vcs) ---
 git_part=""
@@ -25,10 +31,7 @@ if [ -n "$branch" ]; then
   git_part=" ${YELLOW} $branch${RESET}"
 fi
 
-# --- model ---
-model=$(echo "$input" | jq -r '.model.display_name // empty')
-
-# --- context window ---
+# --- context window (Claude Code's reported %, color-coded — preferred over ccusage's 🧠 segment) ---
 used_pct=$(echo "$input" | jq -r '.context_window.used_percentage // empty')
 ctx_part=""
 if [ -n "$used_pct" ]; then
@@ -41,6 +44,20 @@ if [ -n "$used_pct" ]; then
     ctx_color="$GREEN"
   fi
   ctx_part=" ${ctx_color}ctx: ${used_int}% Used${RESET}"
+fi
+
+# --- ccusage spend line. 10s timeout covers cold-start (~6.5s pnpm/node spin-up); warm runs ~70ms.
+# Strip the trailing "| 🧠 ..." segment since we trust Claude Code's ctx value on line 2.
+ccusage_line=""
+if command -v ccusage >/dev/null 2>&1; then
+  if command -v timeout >/dev/null 2>&1; then
+    raw_ccusage=$(echo "$input" | timeout 10s ccusage statusline 2>/dev/null | tr -d '\n')
+  else
+    raw_ccusage=$(echo "$input" | ccusage statusline 2>/dev/null | tr -d '\n')
+  fi
+  if [ -n "$raw_ccusage" ]; then
+    ccusage_line=$(printf "%s" "$raw_ccusage" | sed 's/[[:space:]]*|[[:space:]]*🧠.*$//')
+  fi
 fi
 
 # --- user@host (like p10k context) ---
@@ -57,11 +74,22 @@ if [ -n "$vim_mode" ]; then
   fi
 fi
 
-DIM=$(printf '\033[2m')
-printf "%s%s%s%s%s%s  %s%s%s  %s%s%s" \
+# Pick line-1 content: ccusage if available, else model name, else nothing.
+if [ -n "$ccusage_line" ]; then
+  line1="$ccusage_line"
+elif [ -n "$model" ]; then
+  line1="${DIM}${model}${RESET}"
+else
+  line1=""
+fi
+
+# Render: line 1 (if non-empty) + newline + line 2.
+if [ -n "$line1" ]; then
+  printf "%s\n" "$line1"
+fi
+printf "%s%s%s%s%s%s  %s%s%s" \
   "$BLUE" "$short_cwd" "$RESET" \
   "$git_part" \
   "$ctx_part" \
   "$vim_part" \
-  "$DIM" "$model" "$RESET" \
   "$DIM" "$user_host" "$RESET"
