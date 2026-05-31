@@ -38,7 +38,11 @@
   },
   "effortLevel": "low",
   "advisorModel": "opus",
+  "tui": "fullscreen",
+  "theme": "dark",
   "editorMode": "vim",
+  "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "feedbackSurveyRate": 0
 }
