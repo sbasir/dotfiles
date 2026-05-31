@@ -37,6 +37,11 @@ case ":$PATH:" in
   *":$PNPM_HOME:"*) ;;
   *) export PATH="$PNPM_HOME:$PATH" ;;
 esac
+# Claude Code (installed to $HOME/.local/bin)
+[[ -d "$HOME/.local/bin" ]] && case ":$PATH:" in
+  *":$HOME/.local/bin:"*) ;;
+  *) export PATH="$HOME/.local/bin:$PATH" ;;
+esac
 # pnpm end
 
 # aws auto-completion
@@ -162,3 +167,4 @@ fi
 command -v uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion zsh)"
 [[ -r ~/google-cloud-sdk/completion.zsh.inc ]] && source ~/google-cloud-sdk/completion.zsh.inc
 [[ -r ~/google-cloud-sdk/path.zsh.inc ]] && source ~/google-cloud-sdk/path.zsh.inc
+source /Users/sofy/.safe-chain/scripts/init-posix.sh # Safe-chain Zsh initialization script

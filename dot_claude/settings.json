@@ -1,22 +1,44 @@
 {
+  "env": {},
   "permissions": {
     "allow": [
       "Bash(*aws-vault exec ba.m2.staging*)",
       "Bash(*aws-vault exec ba.m2.dev*)",
+      "Bash(*aws-vault exec ba.uk.legacy*)",
+      "Bash(*aws-vault exec ba.fr.prod*)",
+      "Bash(*aws-vault exec ba.workloads.staging*)",
+      "Bash(*aws-vault exec ba.workloads.staging2*)",
+      "Bash(*aws-vault exec ba.infra.networks*)",
+      "Bash(*aws-vault exec ba.infra.shared*)",
+      "Bash(*aws-vault exec ba.security.keys*)",
+      "Bash(*aws-vault exec ba.security.tools*)",
+      "Bash(*aws-vault exec ba.it.services*)",
       "Bash(sleep*)",
-      "Bash(date*)"
+      "Bash(date*)",
+      "Bash(ls /Users/sofy/Library/CloudStorage/**)",
+      "Read(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
+      "Edit(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
+      "Write(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)"
     ],
     "ask": [
       "Bash(*aws-vault exec *prod*)"
     ]
+  },
+  "model": "sonnet",
+  "hooks": {
+    "PreToolUse": []
   },
   "statusLine": {
     "type": "command",
     "command": "sh ~/.claude/statusline-command.sh"
   },
   "enabledPlugins": {
-    "coderabbit@claude-plugins-official": true
+    "coderabbit@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": true
   },
+  "effortLevel": "low",
+  "advisorModel": "opus",
+  "editorMode": "vim",
   "agentPushNotifEnabled": true,
   "voiceEnabled": true
 }
