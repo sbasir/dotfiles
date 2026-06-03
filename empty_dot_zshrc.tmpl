@@ -37,6 +37,10 @@ case ":$PATH:" in
   *":$PNPM_HOME/bin:"*) ;;
   *) export PATH="$PNPM_HOME/bin:$PATH" ;;
 esac
+case ":$PATH:" in
+  *":$PNPM_HOME"*) ;;
+  *) export PATH="$PNPM_HOME:$PATH" ;;
+esac
 # Claude Code (installed to $HOME/.local/bin)
 [[ -d "$HOME/.local/bin" ]] && case ":$PATH:" in
   *":$HOME/.local/bin:"*) ;;
