@@ -17,12 +17,12 @@
       "Bash(date*)",
       "Bash(ls /Users/sofy/Library/CloudStorage/**)",
       "Read(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
-      "Edit(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
-      "Write(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)"
+      "Edit(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)"
     ],
     "ask": [
       "Bash(*aws-vault exec *prod*)"
-    ]
+    ],
+    "defaultMode": "auto"
   },
   "model": "sonnet",
   "hooks": {
@@ -35,14 +35,29 @@
   "enabledPlugins": {
     "coderabbit@claude-plugins-official": true,
     "frontend-design@claude-plugins-official": true,
-    "slack@claude-plugins-official": true
+    "slack@claude-plugins-official": true,
+    "code-review@claude-plugins-official": true,
+    "superpowers@claude-plugins-official": true,
+    "skill-creator@claude-plugins-official": true,
+    "code-simplifier@claude-plugins-official": false,
+    "claude-md-management@claude-plugins-official": false,
+    "security-guidance@claude-plugins-official": true,
+    "claude-code-setup@claude-plugins-official": false,
+    "firecrawl@claude-plugins-official": false,
+    "terraform@claude-plugins-official": false,
+    "mintlify@claude-plugins-official": false,
+    "aikido@claude-plugins-official": false,
+    "grafana-mcp@claude-plugins-official": true
   },
+  "extraKnownMarketplaces": {},
   "feedbackSurveyRate": 0,
   "effortLevel": "medium",
   "advisorModel": "opus",
   "tui": "fullscreen",
+  "skipWorkflowUsageWarning": true,
   "theme": "dark",
   "editorMode": "vim",
+  "autoScrollEnabled": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
   "voiceEnabled": true

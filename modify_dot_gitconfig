@@ -24,6 +24,8 @@ cat <<'EOF'
 [credential]
 	helper = !aws codecommit credential-helper $@
 	UseHttpPath = true
+[core]
+	excludesFile = /Users/sofy/.gitignore_global
 EOF
 
 # --- preserve external sections from the current file ---
@@ -35,3 +37,4 @@ awk '
     /^\[/             { if (in_section) in_section=0 }
     in_section        { print }
 ' /dev/stdin
+

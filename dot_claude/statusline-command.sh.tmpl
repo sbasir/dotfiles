@@ -46,44 +46,10 @@ if [ -n "$used_pct" ]; then
   ctx_part=" ${ctx_color}ctx: ${used_int}% Used${RESET}"
 fi
 
-# --- ccusage spend line (background-update pattern) ---
-# ccusage v18 scans all transcripts (~11s on large histories). We read the semaphore cache
-# directly for instant display, then kick off ccusage in the background to refresh it.
-# Strip the trailing "| 🧠 ..." segment since we trust Claude Code's ctx value on line 2.
+# --- ccusage spend line: disabled (was spawning a background ccusage scan + two
+# python3 subprocesses on every statusline refresh, too resource-heavy). Line 1
+# now just falls back to the model name below.
 ccusage_line=""
-if command -v ccusage >/dev/null 2>&1; then
-  _session_id=$(echo "$input" | jq -r '.session_id // empty')
-  if [ -n "$_session_id" ]; then
-    _tmpdir=$(python3 -c "import tempfile; print(tempfile.gettempdir())")
-    _sem="$_tmpdir/ccusage-semaphore/${_session_id}.lock"
-    _pid_alive="false"
-    if [ -f "$_sem" ]; then
-      _last_out=$(python3 -c "
-import json, os
-try:
-    d = json.load(open('$_sem'))
-    pid = d.get('pid')
-    alive = False
-    if pid:
-        try: os.kill(pid, 0); alive = True
-        except: pass
-    print(d.get('lastOutput','') + '|||' + str(alive))
-except:
-    print('|||False')
-" 2>/dev/null)
-      _cached="${_last_out%|||*}"
-      _pid_alive="${_last_out##*|||}"
-      if [ -n "$_cached" ]; then
-        ccusage_line=$(printf "%s" "$_cached" | sed 's/[[:space:]]*|[[:space:]]*🧠.*$//')
-      fi
-    fi
-    # Kick off background refresh if no ccusage is currently running for this session
-    if [ "$_pid_alive" != "True" ]; then
-      (echo "$input" | ccusage statusline >/dev/null 2>&1) &
-      disown $! 2>/dev/null
-    fi
-  fi
-fi
 
 # --- user@host (like p10k context) ---
 user_host="{{ .chezmoi.username }}@{{ .chezmoi.hostname }}"
