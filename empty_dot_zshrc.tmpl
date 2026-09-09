@@ -132,6 +132,7 @@ if (( ${+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS} )) \
         "${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]}"
     )
 fi
+eval "$(tirith init)"
 {{ end }}
 {{- if eq .chezmoi.os "linux" }}
 # --- Linux (remote workspace) ---
