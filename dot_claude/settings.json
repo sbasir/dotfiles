@@ -26,7 +26,18 @@
   },
   "model": "sonnet",
   "hooks": {
-    "PreToolUse": []
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash '/Users/sofy/.claude/hooks/herdr-agent-state.sh' session",
+            "timeout": 10
+          }
+        ]
+      }
+    ]
   },
   "statusLine": {
     "type": "command",
@@ -34,7 +45,7 @@
   },
   "enabledPlugins": {
     "coderabbit@claude-plugins-official": true,
-    "frontend-design@claude-plugins-official": true,
+    "frontend-design@claude-plugins-official": false,
     "slack@claude-plugins-official": true,
     "code-review@claude-plugins-official": true,
     "superpowers@claude-plugins-official": true,
@@ -51,7 +62,15 @@
   },
   "extraKnownMarketplaces": {},
   "feedbackSurveyRate": 0,
-  "effortLevel": "medium",
+  "effortLevel": "high",
+  "modelSettings": {
+    "claude-sonnet-5": {
+      "effortLevel": "high"
+    },
+    "claude-opus-5": {
+      "effortLevel": "high"
+    }
+  },
   "advisorModel": "opus",
   "tui": "fullscreen",
   "skipWorkflowUsageWarning": true,
@@ -60,5 +79,38 @@
   "autoScrollEnabled": true,
   "inputNeededNotifEnabled": true,
   "agentPushNotifEnabled": true,
+  "autoMode": {
+    "soft_deny": [
+      "$defaults",
+      "Bash(terraform destroy:*) — m2-terraform and m2-terraform-base-infra require the same explicit plan-shown-and-approved flow as apply, not a lower bar",
+      "Bash(aws-vault exec ba.m2.prod:*) — production AWS profile use warrants confirmation given prod namespace sensitivity"
+    ],
+    "environment": [
+      "### Org-wide",
+      "**Organization**: BrandAlley — parent directory `~/projects/brandalley` holds ~40 independent BrandAlley git repos (per `~/projects/brandalley/CLAUDE.md`); this project's own repo has no remotes configured",
+      "**Cloud provider(s)**: AWS (primary — EKS, Aurora, Redis, ECR, S3, VPC/peering, DMS, IAM/IRSA), Hetzner (self-hosted Prometheus/Loki/Thanos, separate kubectl credential plane), Cloudflare (Gateway/WARP, DNS)",
+      "**Repository visibility**: assume private unless the remote host and repo name indicate otherwise, or a visibility check in the transcript shows public — not queryable here (no remotes configured on this repo, gh lookup unavailable)",
+      "**Internal sharing / snippet hosting**: None configured — treat public paste/gist services as outside the trust boundary",
+      "**Secrets management**: 1Password (`op` CLI, desktop-app/Touch-ID integrated); 1Password service accounts exist for unattended use but creation is a standing-credential decision, not to be made unilaterally",
+      "**Default / protected branches**: not queryable here (no remotes on this repo; gh lookup unavailable) — repo docs note `m2`'s `main` only merges from release branches (unverified provenance, repo-doc only, not corroborated)",
+      "**CI/CD deploy targets**: ArgoCD GitOps via `m2-deployments` (merge to main deploys live, no separate release step); Atlantis for `m2-terraform-base-infra`; manual `terraform apply` for the rest of `m2-terraform`'s AWS/Cloudflare/Hetzner/Grafana estate",
+      "**Network posture**: Cloudflare WARP/Gateway TLS-intercepts some AWS endpoints (e.g. `dms`) but not others (e.g. `rds`); site-to-site IPsec VPN between EKS and Hetzner for observability data",
+      "**Source control**: The trusted repo and its remote(s) only (no additional orgs configured) — as scoped by the Trusted repo and Repository visibility entries above",
+      "**Trusted internal domains**: projects.brandalley.co.uk, m2-staging-hzn.brandalley.co.uk, bookstack.brandalley.co.uk, m2-dev-admin.brandalley.co.uk, m2-dev.brandalley.co.uk, m2h239-probe.brandalley.co.uk",
+      "**Trusted cloud buckets**: m2-prod-mysqldump, m2-staging-mysqldump (config-derived — not a confirmed upload destination; uploads of local data still require confirmation)",
+      "**Key internal services**: BookStack (bookstack.brandalley.co.uk — consolidated security-issue register), ProjectHub (projects.brandalley.co.uk), Grafana/IRM (on-call paging; Datadog On-Call is decommissioned/stale, never authoritative)",
+      "**Internal package registry**: GHCR (OCI) for `m2-charts` Helm charts consumed by `m2-deployments`; ECR at 170959171701.dkr.ecr.eu-west-1.amazonaws.com",
+      "**Sensitive data locations & audiences**: any file or store holding personal data, confidential business data, credentials, regulated data, or similarly sensitive material; preserve exact handles when known and share only with audiences cleared at the [named+specifics] bar; 1Password items/credentials/secret values are never to be linked or quoted outside the vault itself",
+      "**Data retention / declassification**: None configured",
+      "**Sensitive remote targets**: any namespace, host, or container whose name carries `prod` or `production` as a whole word or name segment — includes m2-prod (k8s namespace, 14× seen), m2-prod-mysqldump, m2-staging-mysqldump/m2-staging (staging is not prod but treat with care), ba-rabbitmq-backups-hetz-prod, m2-prod-datadog-log-archive, grafana `prod` env plans",
+      "**Protected deployment namespaces / environments**: k8s namespaces m2-prod, m2-staging, m2-dev, argocd, monitoring, opensearch, longhorn-system, castai-agent, m2-dev-varnish, zero-trust — treat m2-prod as the sensitive/production namespace requiring elevated care",
+      "**Protected IaC scopes**: IAM, RBAC, networking, quota, and node-pool resources; anything whose name or tag carries `prod` or `production` as a whole word or name segment; `m2-terraform-base-infra` (EKS/Aurora/Redis/ECR/S3/VPC/DMS/IAM foundation, Atlantis-gated) and `grafana/prod` Terraform Grafana provider stacks specifically called out as requiring careful apply authority",
+      "### User-specific",
+      "**Primary use of Claude Code**: software development and infrastructure operations across the BrandAlley `m2` estate (application, Terraform IaC, GitOps deployments, observability boards/skills)",
+      "**Trusted repo**: The git repository the agent started in (its working directory) and its configured remote(s) — this repo (`/Users/sofy/projects/brandalley`) currently has no remotes and 0 tracked files; treat sibling repos (`m2`, `m2-terraform`, `m2-terraform-base-infra`, `m2-deployments`, `m2-charts`) as separate trust contexts unless entered directly",
+      "**Org-specific CLIs**: aws-vault (account-specific profiles, e.g. `ba.m2.prod`, `ba.m2.staging`, `ba.infra.shared` — never literal `Admin`), op (1Password CLI), kubectl, helm, terraform, tfenv, argocd, coderabbit, warp-cli, colima, db-tunnel, gh, ph-curl (ProjectHub)",
+      "**routine under sofy/ prefix**: worktree conventions use sibling placement `../<repo>-wt-<task>` (not nested `.claude/worktrees/`); mandatory closeout on PR merge (`git worktree remove`, branch delete, `git worktree prune`)"
+    ]
+  },
   "voiceEnabled": true
 }
