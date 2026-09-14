@@ -128,7 +128,6 @@ if (( ${+POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS} )) \
         "${POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS[@]}"
     )
 fi
-eval "$(tirith init)"
 {{ end }}
 {{- if eq .chezmoi.os "linux" }}
 # --- Linux (remote workspace) ---
@@ -170,5 +169,6 @@ command -v uv >/dev/null 2>&1 && eval "$(uv generate-shell-completion zsh)"
 [[ -r ~/google-cloud-sdk/path.zsh.inc ]] && source ~/google-cloud-sdk/path.zsh.inc
 source /Users/sofy/.safe-chain/scripts/init-posix.sh # Safe-chain Zsh initialization script
 
+eval "$(tirith init)"
 # aimux — AI workspace orchestrator
 # eval "$(aimux completions zsh)"
