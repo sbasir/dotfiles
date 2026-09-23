@@ -20,7 +20,9 @@
       "Edit(~/.aimux/profiles/*/plans/**)",
       "Edit(~/.claude/plans/**)",
       "Edit(~/.claude/projects/*/memory/**)",
-      "Read(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)"
+      "Read(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
+      "Read(~/.aimux/profiles/*/plans/**)",
+      "Read(~/.claude/plans/**)"
     ],
     "ask": [
       "Bash(*aws-vault exec *prod*)"
