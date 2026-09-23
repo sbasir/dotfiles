@@ -137,5 +137,5 @@
     ]
   },
   "voiceEnabled": true,
-  "plansDirectory": "~/.claude/plans"
+  "plansDirectory": "/Users/sofy/.claude/plans"
 }
