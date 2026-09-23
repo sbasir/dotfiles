@@ -136,5 +136,6 @@
       "**routine under sofy/ prefix**: worktree conventions use sibling placement `../<repo>-wt-<task>` (not nested `.claude/worktrees/`); mandatory closeout on PR merge (`git worktree remove`, branch delete, `git worktree prune`)"
     ]
   },
-  "voiceEnabled": true
+  "voiceEnabled": true,
+  "plansDirectory": "~/.claude/plans"
 }
