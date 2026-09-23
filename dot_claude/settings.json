@@ -3,8 +3,6 @@
   "permissions": {
     "allow": [
       "Bash(*aws-vault exec ba.fr.prod*)",
-      "Bash(*aws-vault exec ba.workloads.staging*)",
-      "Bash(*aws-vault exec ba.workloads.staging2*)",
       "Bash(*aws-vault exec ba.infra.networks*)",
       "Bash(*aws-vault exec ba.infra.shared*)",
       "Bash(*aws-vault exec ba.it.services*)",
@@ -12,17 +10,28 @@
       "Bash(*aws-vault exec ba.m2.staging*)",
       "Bash(*aws-vault exec ba.security.keys*)",
       "Bash(*aws-vault exec ba.security.tools*)",
-      "Bash(*aws-vault exec ba.it.services*)",
-      "Bash(sleep*)",
+      "Bash(*aws-vault exec ba.uk.legacy*)",
+      "Bash(*aws-vault exec ba.workloads.staging*)",
+      "Bash(*aws-vault exec ba.workloads.staging2*)",
       "Bash(date*)",
       "Bash(ls /Users/sofy/Library/CloudStorage/**)",
-      "Read(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
-      "Edit(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)"
+      "Bash(sleep*)",
+      "Edit(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)",
+      "Edit(~/.aimux/profiles/*/plans/**)",
+      "Edit(~/.claude/plans/**)",
+      "Edit(~/.claude/projects/*/memory/**)",
+      "Read(/Users/sofy/Library/CloudStorage/**/My Drive/Obsidian/Obsidian Vault v1/work/projects/brandalley/**)"
     ],
     "ask": [
       "Bash(*aws-vault exec *prod*)"
     ],
-    "defaultMode": "auto"
+    "defaultMode": "auto",
+    "additionalDirectories": [
+      "~/.aimux/profiles/ba/plans",
+      "~/.aimux/profiles/deepseek/plans",
+      "~/.aimux/profiles/personal/plans",
+      "~/.claude/plans"
+    ]
   },
   "model": "sonnet",
   "hooks": {
@@ -34,6 +43,18 @@
             "type": "command",
             "command": "bash '/Users/sofy/.claude/hooks/herdr-agent-state.sh' session",
             "timeout": 10
+          }
+        ]
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "EnterWorktree",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "~/.claude/hooks/allow-sibling-worktree.sh",
+            "timeout": 5
           }
         ]
       }
@@ -58,7 +79,8 @@
     "terraform@claude-plugins-official": false,
     "mintlify@claude-plugins-official": false,
     "aikido@claude-plugins-official": false,
-    "grafana-mcp@claude-plugins-official": true
+    "grafana-mcp@claude-plugins-official": true,
+    "atlassian@claude-plugins-official": true
   },
   "extraKnownMarketplaces": {},
   "feedbackSurveyRate": 0,
