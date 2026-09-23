@@ -2,14 +2,14 @@
   "env": {},
   "permissions": {
     "allow": [
-      "Bash(*aws-vault exec ba.m2.staging*)",
-      "Bash(*aws-vault exec ba.m2.dev*)",
-      "Bash(*aws-vault exec ba.uk.legacy*)",
       "Bash(*aws-vault exec ba.fr.prod*)",
       "Bash(*aws-vault exec ba.workloads.staging*)",
       "Bash(*aws-vault exec ba.workloads.staging2*)",
       "Bash(*aws-vault exec ba.infra.networks*)",
       "Bash(*aws-vault exec ba.infra.shared*)",
+      "Bash(*aws-vault exec ba.it.services*)",
+      "Bash(*aws-vault exec ba.m2.dev*)",
+      "Bash(*aws-vault exec ba.m2.staging*)",
       "Bash(*aws-vault exec ba.security.keys*)",
       "Bash(*aws-vault exec ba.security.tools*)",
       "Bash(*aws-vault exec ba.it.services*)",

@@ -15,7 +15,6 @@ pager = "less -R"
     args = ["init"]
 
 [merge]
-    {{- if eq .chezmoi.os "linux" }}
     command = "nvim"
     args = [
         "-d",
@@ -23,12 +22,9 @@ pager = "less -R"
         {{ printf "%q" "{{ .Source }}" }},
         {{ printf "%q" "{{ .Target }}" }},
     ]
-    {{ end }}
 
 [diff]
     exclude = ["scripts"]
-    {{- if eq .chezmoi.os "linux" }}
     command = "nvim"
     args = ["-d"]
-    {{ end -}}
 

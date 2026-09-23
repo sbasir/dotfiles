@@ -63,6 +63,19 @@ alias lstop='limactl stop docker'
 alias lshell='limactl shell docker'
 alias lstatus='limactl list'
 
+# k9s cluster shortcuts — one command instead of aws-vault exec + kubectx + k9s.
+# EKS: k9s takes --context directly, so kubectx is skipped entirely.
+k9s-dev()     { aws-vault exec ba.m2.dev     -- k9s --context arn:aws:eks:eu-west-1:809617177686:cluster/m2-dev "$@" }
+k9s-staging() { aws-vault exec ba.m2.staging -- k9s --context arn:aws:eks:eu-west-1:148043874434:cluster/m2-staging "$@" }
+k9s-prod()    { aws-vault exec ba.m2.prod    -- k9s --context arn:aws:eks:eu-west-1:768502098180:cluster/m2-prod "$@" }
+# Hetzner: bare kubectl/k9s, no aws-vault — requires WARP up. Kubeconfig mirrors per
+# ~/.aimux/.../reference_hetzner_cluster_kubeconfigs.md; re-sync those after any cluster rebuild.
+k9s-hzn-dev()        { k9s --kubeconfig ~/.kube/ba-hetz-cluster-dev/kubeconfig-remote.yaml "$@" }
+k9s-hzn-staging()    { k9s --kubeconfig ~/.kube/ba-hetz-cluster-staging/kubeconfig-remote.yaml "$@" }
+k9s-hzn-prod()       { k9s --kubeconfig ~/.kube/ba-hetz-cluster-prod/kubeconfig-remote.yaml "$@" }
+k9s-hzn-db-staging() { k9s --kubeconfig ~/.kube/ba-hetz-db-staging/kubeconfig-remote.yaml "$@" }
+k9s-hzn-db-prod()    { k9s --kubeconfig ~/.kube/ba-hetz-db-prod/kubeconfig-remote.yaml "$@" }
+
 source <(colima completion zsh)
 
 # --- Cloudflare WARP TLS-inspection workaround (dynamic precmd guard) ---
